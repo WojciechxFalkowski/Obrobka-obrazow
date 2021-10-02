@@ -1,0 +1,150 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+$cardin-100: #181E1B;
+$cardin-40: #A3A5A4;
+$cardin-5: #F3F4F4;
+$cardin-10: #E8E9E8;
+$primary: $cardin-100;
+$black: $cardin-100;
+$bs-body-color: $cardin-100;
+$white: #fff;
+$black: #000000;
+$sapphire-100: #00A1E7;
+$turquoise: #00DFB7;
+//$gray: $cardin-100;
+$primary: $cardin-100;
+$secondary: $cardin-40;
+$body-color: $cardin-100;
+//$coolgray-10: #F2F2F2;
+//$coolgray-30: #CCCCCC;
+//$coolgray-50: #999999;
+
+
+
+$theme-colors: map-merge(
+                $theme-colors,
+                (
+                        "primary": $primary,
+                        "secondary": $secondary,
+                )
+);
+
+// $link-hover-decoration: none;
+// $border-radius: 0;
+$font-family-sans-serif: 'Poppins', 'sans-serif';
+// $font-weight-bold: 600;
+
+//Spacers
+$spacer: 1rem;
+$spacers: (
+        0: 0,
+        1: $spacer * .25, //4
+        2: $spacer * .5, //8
+        3: $spacer * 1, //16
+        4: $spacer * 1.5, //24
+        5: $spacer * 2, //32
+        6: $spacer * 2.5, //40
+        7: $spacer * 3, //48
+        8: $spacer * 4, //64
+);
+
+$headers-classes: (
+        "64", "48", "40-2", "40-1", "24", "20"
+);
+
+$headers-font-sizes: (
+        "64": 4rem,
+        "48": 3rem,
+        "40-2": 2.5rem,
+        "40-1": 2.5rem,
+        "24": 1.5rem,
+        "20": 1.25rem,
+);
+
+$headers-line-heights: (
+        "64": 4.5rem,
+        "48": 3.5rem,
+        "40-2": 3.75rem,
+        "40-1": 3rem,
+        "24": 2.25rem,
+        "20": 1.875rem,
+);
+
+// Body
+$body-classes: (
+        "32", "24-2", "24-1", "16-2", "16-1", "12"
+);
+
+$body-font-sizes: (
+        "32": 2rem,
+        "24-2": 1.5rem,
+        "24-1": 1.5rem,
+        "16-2": 1rem,
+        "16-1": 1rem,
+        "12": 0.75rem,
+);
+
+$body-line-heights: (
+        "32": 3rem,
+        "24-2": 2.25rem,
+        "24-1": 1.625rem,
+        "16-2": 1.625rem,
+        "16-1": 1.5rem,
+        "14-1": 1rem,
+        "12": 1.25rem,
+);
+
+//inputs
+$input-btn-padding-y: 1.25rem;
+$input-btn-padding-x: 1.5rem;
+
+//buttons
+$btn-padding-y: $input-btn-padding-y;
+$btn-padding-x: $input-btn-padding-x;
+
+//border
+$border-color: $cardin-10;
+
+//inputs
+$input-border-radius: 0;
+$form-floating-label-opacity: 1;
+
+// @import "~bootstrap/scss/functions";
+// @import "~bootstrap/scss/variables";
+// @import "~bootstrap/scss/mixins";
+// @import "~bootstrap/scss/root";
+// @import "~bootstrap/scss/reboot";
+// @import "~bootstrap/scss/type";
+// @import "~bootstrap/scss/images";
+// @import "~bootstrap/scss/code";
+// @import "~bootstrap/scss/grid";
+// @import "~bootstrap/scss/tables";
+// @import "~bootstrap/scss/forms";
+// @import "~bootstrap/scss/buttons";
+// @import "~bootstrap/scss/transitions";
+// @import "~bootstrap/scss/dropdown";
+// @import "~bootstrap/scss/button-group";
+// @import "~bootstrap/scss/input-group";
+// @import "~bootstrap/scss/custom-forms";
+// @import "~bootstrap/scss/nav";
+// @import "~bootstrap/scss/navbar";
+// @import "~bootstrap/scss/card";
+// @import "~bootstrap/scss/breadcrumb";
+// @import "~bootstrap/scss/pagination";
+// @import "~bootstrap/scss/badge";
+// @import "~bootstrap/scss/jumbotron";
+// @import "~bootstrap/scss/alert";
+// @import "~bootstrap/scss/progress";
+// @import "~bootstrap/scss/media";
+// @import "~bootstrap/scss/list-group";
+// @import "~bootstrap/scss/close";
+// @import "~bootstrap/scss/toasts";
+// @import "~bootstrap/scss/modal";
+// @import "~bootstrap/scss/tooltip";
+// @import "~bootstrap/scss/popover";
+// @import "~bootstrap/scss/carousel";
+// @import "~bootstrap/scss/spinners";
+// @import "~bootstrap/scss/utilities";
+// @import "~bootstrap/scss/print";

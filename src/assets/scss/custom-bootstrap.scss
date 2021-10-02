@@ -1,0 +1,146 @@
+ //@import "fonts";
+@import "variables";
+@import "utilities";
+// Layout & components
+@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/type";
+@import "~bootstrap/scss/containers";
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/utilities";
+@import "~bootstrap/scss/transitions";
+//@import "~bootstrap/scss/nav";
+//@import "~bootstrap/scss/navbar";
+//@import "~bootstrap/scss/dropdown";
+//@import "~bootstrap/scss/modal";
+//@import "~bootstrap/scss/offcanvas";
+@import "~bootstrap/scss/buttons";
+@import "~bootstrap/scss/forms";
+//@import "~bootstrap/scss/forms";
+//@import "~bootstrap/scss/card";
+@import "~bootstrap/scss/images";
+@import "~bootstrap/scss/carousel";
+//@import "~bootstrap/scss/tables";
+//@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/utilities";
+@import "~bootstrap/scss/utilities/api";
+// Typography
+
+@mixin make-header-size($size) {
+  font-family: $font-family-sans-serif;
+  font-weight: 500;
+  font-size: map-get($headers-font-sizes, $size);
+  line-height: map-get($headers-line-heights, $size);
+}
+
+@mixin make-body-size($size) {
+  font-family: $font-family-sans-serif;
+  font-weight: 500;
+  font-size: map-get($body-font-sizes, $size);
+  line-height: map-get($body-line-heights, $size);
+}
+
+.header {
+  @each $header in $headers-classes {
+    &-#{$header} {
+      @include make-header-size($header);
+    }
+  }
+
+  @each $header in $headers-classes {
+    @each $bp, $value in $grid-breakpoints {
+      $min: breakpoint-min($bp, $grid-breakpoints);
+      @if $min {
+        @include media-breakpoint-up($bp) {
+          &-#{$bp}-#{$header} {
+            @include make-header-size($header);
+          }
+        }
+      }
+    }
+  }
+}
+
+.body {
+  @each $body in $body-classes {
+    @each $bp, $value in $grid-breakpoints {
+      $min: breakpoint-min($bp, $grid-breakpoints);
+      @if $min {
+        @include media-breakpoint-up($bp) {
+          &-#{$bp}-#{$body} {
+            @include make-body-size($body);
+          }
+        }
+      } @else {
+        &-#{$body} {
+          @include make-body-size($body);
+        }
+      }
+    }
+  }
+}
+
+// Buttons
+.btn-primary {
+  border-radius: 0.25rem;
+  @include button-variant(
+                  $turquoise,
+                  $turquoise,
+                  $white,
+                  lighten($turquoise, 5%),
+                  $white,
+                  lighten($white, 5%),
+                  lighten($turquoise, 5%),
+                  $white,
+                  $white,
+                  lighten($turquoise, 5%),
+                  lighten($turquoise, 5%),
+  );
+}
+
+.btn-link {
+  padding: 0;
+  margin: 0;
+  @include button-variant(
+                  $white,
+                  $white,
+                  $sapphire-100,
+                  $white,
+                  $white,
+                  darken($sapphire-100, 10%),
+                  $white,
+                  $white,
+                  darken($sapphire-100, 10%),
+                  darken($sapphire-100, 10%),
+                  $sapphire-100,
+  );
+}
+
+.underline-image {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    width: 100%;
+    height: 0.625rem;
+    background-repeat: no-repeat;
+    z-index: -1;
+  }
+}
+
+.wrapper {
+  margin: 0 2.5rem;
+
+  @media (min-width: 992px) {
+    margin: 0 2rem;
+  }
+  @media (min-width: 1200px) {
+    max-width: 1140px;
+    margin: 0 auto;
+  }
+}
+
