@@ -5,10 +5,13 @@ import {createProtocol} from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, {VUEJS_DEVTOOLS} from 'electron-devtools-installer'
 import * as electron from "electron";
 import path from 'path';
-const { ipcMain } = require('electron');
+
+const {ipcMain} = require('electron');
 const fs = require('fs');
 const isDevelopment = process.env.NODE_ENV !== 'production'
-
+// const cv = require('/public/opencv');
+// console.log('cv');
+// console.log(cv)
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
     {scheme: 'app', privileges: {secure: true, standard: true}}
@@ -20,8 +23,8 @@ const MenuItems = electron.MenuItem;
 async function createWindow() {
     // Create the browser window.
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1400,
+        height: 800,
         webPreferences: {
 
             // Use pluginOptions.nodeIntegration, leave this alone
@@ -31,6 +34,8 @@ async function createWindow() {
             enableRemoteModule: false,
             // __static is set by webpack and will point to the public directory
             preload: path.resolve(__static, 'preload.js'),
+            //TODO :src="images[0].path" not working without it
+            webSecurity: process.env.NODE_ENV !== 'development'
         }
     })
     // win.maximize();
@@ -121,12 +126,47 @@ async function createWindow() {
         ctxMenu.popup(win, params.x, params.y)
     })
 }
+ipcMain.on('TEST_IPC-MAIN', (event, payload) => {
+    console.log("TEST_IPC-MAIN")
+    console.log(payload) // prints "ping"
+    event.returnValue = "test value"
+});
 ipcMain.on('READ_FILE', (event, payload) => {
     console.log('READ_FILE')
-    console.log(event)
+    // console.log(event)
     console.log(payload)
-    // const content = fs.readFileSync(payload.path);
+    console.log(fs)
+    console.log(__dirname)
+    console.log(fs.existsSync(__dirname))
+
+    const pathName = path.join(__dirname, 'images');
+    let file = path.join(pathName, 'file1');
+    let contents = 'siemka';
+    
+
+    if (!fs.existsSync(pathName)) {
+        fs.mkdirSync(pathName);
+    }
+    fs.writeFile(file, contents, function (err) {
+        console.log('BEZ BLEDU')
+        if (err) {
+            console.log(err)
+        }
+    })
+
+
+    console.log(fs.readdir('C:\\Users\\48698\\OneDrive\\Documents\\skill\\projects\\apo_wojciech_falkowski\\', (e, files) => {
+        console.log(files)
+    }))
+    console.log(fs.readdir(__dirname, (e, files) => {
+        console.log(e)
+        console.log("ee?")
+        console.log(files)
+    }))
+    // const content = fs.readFile(payload.path);
+    // console.log(content)
     // event.reply('READ_FILE', { content });
+    event.reply('READ_FILE', {content: 'content'});
 });
 
 // Quit when all windows are closed.

@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
+const dom = require( './dom' );
 
-const validChannels = ['READ_FILE', 'WRITE_FILE'];
+const validChannels = ['READ_FILE', 'WRITE_FILE','TEST_IPC-MAIN'];
 contextBridge.exposeInMainWorld(
     'ipc', {
         send: (channel, data) => {
@@ -16,3 +17,4 @@ contextBridge.exposeInMainWorld(
         },
     },
 );
+contextBridge.exposeInMainWorld('file',{...dom});
