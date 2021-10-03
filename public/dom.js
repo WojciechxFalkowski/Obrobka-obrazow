@@ -14,17 +14,18 @@ exports.getFiles = () => {
     const files = fs.readdirSync(pathName);
 
     return files.map(filename => {
-        const filePath = path.resolve(pathName, filename);
-        const fileStats = fs.statSync(filePath);
+        // const filePath = path.resolve(pathName, filename);
+        // const fileStats = fs.statSync(filePath);
 
-        return {
-            name: filename,
-            path: filePath,
-            size: {
-                number: Number(fileStats.size / 1000).toFixed(1),
-                units: 'kg'
-            }
-        };
+        return {filename,pathName}
+        // return {
+        //     name: filename,
+        //     path: filePath,
+        //     size: {
+        //         number: Number(fileStats.size / 1000).toFixed(1),
+        //         units: 'kg'
+        //     }
+        // };
     });
 
     // console.log(files)

@@ -1,7 +1,6 @@
 <template>
   <div class="crud-file">
     <h1>CRUD FILE</h1>
-
     <!--    <form>-->
     <!--      <div class="form-group">-->
     <!--        <label>File name</label>-->
@@ -36,19 +35,12 @@
       <img v-if="images.length>0" :src="images[0].path" alt="">
     </div>
 
-    <img v-for="(image,index) of getFiles" :key="index" :src="image.path" alt="">
+    <img v-for="(image,index) of getImages" :key="index" :src="image.path" alt="">
 
   </div>
 </template>
 <script>
 
-// import cv from 'opencv4nodejs';
-// import cv from './../utils/opencv';
-const cv = require('./../utils/opencv');
-// const {remote} = require('electron');
-// const dbInstance = remote.getGlobal('db');
-// import dom from './../utils/dom';
-// const fs = require('fs');
 export default {
   name: 'About',
   data() {
@@ -56,41 +48,37 @@ export default {
       images: []
     }
   },
-  computed:{
-    getFiles(){
-      return window.file.getFiles()
+  mounted() {
+    console.log('mounted')
+    window.customAPI.ipcRenderer.invoke('app:get-files').then((files = []) => {
+      console.log(files)
+      this.images = [...files]
+    });
+
+  },
+  computed: {
+    getImages() {
+      return this.images;
     }
   },
-  mounted() {
-    // handle reply from the backend
-    // window.ipc.on('READ_FILE', (payload) => {
-    //   console.log(payload.content);
-    // });
-    console .log('cv');
-    console.log(cv)
 
-    console.log('window')
-    console.log(window.file.getFiles())
-
-
-    // console.log('dom')
-    // console.log(dom)
-    // console.log('dbInstance')
-    // console.log(dbInstance)
-    // const fs = window.require('fs')
-    // console.log(fs)
-
-  },
   methods: {
-    addFiles(){
+    addFiles() {
 
     },
     readFile() {
+      console.log('readFile')
+
+      console.log('pathname');
+      // console.log(window.customAPI.file.getFiles())
+      // console.log(window.customAPI);
+      // console.log(window.customAPI.file.getFiles())
+
       // ask backend to read file
-      const path = "C:\\Users\\48698\\OneDrive\\Documents\\skill\\projects\\apo_wojciech_falkowski\\public\\images";
+      // const path = "C:\\Users\\48698\\OneDrive\\Documents\\skill\\projects\\apo_wojciech_falkowski\\public\\images";
       // console.log(this.$refs.imageRef)
-      const payload = {path};
-      window.ipc.send('READ_FILE', payload);
+      // const payload = {path};
+      // window.ipc.send('READ_FILE', payload);
     },
     previewFiles(event) {
       console.log(event.target.files);
@@ -101,12 +89,12 @@ export default {
       //   console.log(file)
       // })
     },
-    testFunction(){
+    testFunction() {
       console.log(window)
-      const payload = {
-        value:'ping'
-      }
-      console.log(window.ipc.send('TEST_IPC-MAIN',payload));
+      // const payload = {
+      //   value:'ping'
+      // }
+      // console.log(window.ipc.send('TEST_IPC-MAIN',payload));
 
       // window.ipc.invoke('some-name', someArgument).then((result) => {
       //   // ...

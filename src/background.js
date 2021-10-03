@@ -1,6 +1,6 @@
 'use strict'
 
-import {app, protocol, BrowserWindow} from 'electron'
+import {app, protocol, BrowserWindow, dialog} from 'electron'
 import {createProtocol} from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, {VUEJS_DEVTOOLS} from 'electron-devtools-installer'
 import * as electron from "electron";
@@ -8,10 +8,12 @@ import path from 'path';
 
 const {ipcMain} = require('electron');
 const fs = require('fs');
+
+// local dependencies
+const io = require('./main_process/io');
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
-// const cv = require('/public/opencv');
-// console.log('cv');
-// console.log(cv)
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
     {scheme: 'app', privileges: {secure: true, standard: true}}
@@ -35,7 +37,8 @@ async function createWindow() {
             // __static is set by webpack and will point to the public directory
             preload: path.resolve(__static, 'preload.js'),
             //TODO :src="images[0].path" not working without it
-            webSecurity: process.env.NODE_ENV !== 'development'
+            // webSecurity: process.env.NODE_ENV !== 'development'
+            webSecurity: false,
         }
     })
     // win.maximize();
@@ -121,11 +124,20 @@ async function createWindow() {
     }))
     ctxMenu.append(new MenuItems({
         role: 'selectAll',
+    }));
+    ctxMenu.append(new MenuItems({
+        role: 'toggleDevTools',
     }))
     win.webContents.on('context-menu', function (e, params) {
         ctxMenu.popup(win, params.x, params.y)
     })
+    win.webContents.openDevTools()
+
+// watch files
+    io.watchFiles(win);
+
 }
+
 ipcMain.on('TEST_IPC-MAIN', (event, payload) => {
     console.log("TEST_IPC-MAIN")
     console.log(payload) // prints "ping"
@@ -142,7 +154,7 @@ ipcMain.on('READ_FILE', (event, payload) => {
     const pathName = path.join(__dirname, 'images');
     let file = path.join(pathName, 'file1');
     let contents = 'siemka';
-    
+
 
     if (!fs.existsSync(pathName)) {
         fs.mkdirSync(pathName);
@@ -196,7 +208,7 @@ app.on('ready', async () => {
             console.error('Vue Devtools failed to install:', e.toString())
         }
     }
-    createWindow()
+    createWindow();
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -213,3 +225,51 @@ if (isDevelopment) {
         })
     }
 }
+
+/**
+ * FILES
+ */
+// return list of files
+ipcMain.handle('app:get-files', () => {
+
+    return io.getFiles();
+});
+
+// listen to file(s) add event
+ipcMain.handle('app:on-file-add', (event, files = []) => {
+    io.addFiles(files);
+});
+
+// open filesystem dialog to choose files
+ipcMain.handle('app:on-fs-dialog-open', (event) => {
+    const files = dialog.showOpenDialogSync({
+        properties: ['openFile', 'multiSelections'],
+    });
+
+    io.addFiles(files.map(filepath => {
+        return {
+            name: path.parse(filepath).base,
+            path: filepath,
+        };
+    }));
+});
+
+/*-----*/
+
+// listen to file delete event
+ipcMain.on('app:on-file-delete', (event, file) => {
+    io.deleteFile(file.filepath);
+});
+
+// listen to file open event
+ipcMain.on('app:on-file-open', (event, file) => {
+    io.openFile(file.filepath);
+});
+
+// listen to file copy event
+ipcMain.on('app:on-file-copy', (event, file) => {
+    event.sender.startDrag({
+        file: file.filepath,
+        icon: path.resolve(__dirname, './resources/paper.png'),
+    });
+});
