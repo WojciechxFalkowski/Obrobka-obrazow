@@ -127,6 +127,9 @@ async function createWindow() {
     }));
     ctxMenu.append(new MenuItems({
         role: 'toggleDevTools',
+    }));
+    ctxMenu.append(new MenuItems({
+        role: 'forceReload',
     }))
     win.webContents.on('context-menu', function (e, params) {
         ctxMenu.popup(win, params.x, params.y)
@@ -257,7 +260,7 @@ ipcMain.handle('app:on-fs-dialog-open', (event) => {
 /*-----*/
 
 // listen to file delete event
-ipcMain.on('app:on-file-delete', (event, file) => {
+ipcMain.handle('app:on-file-delete', (event, file) => {
     io.deleteFile(file.filepath);
 });
 

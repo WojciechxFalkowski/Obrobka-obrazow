@@ -13,6 +13,7 @@ $white: #fff;
 $black: #000000;
 $sapphire-100: #00A1E7;
 $turquoise: #00DFB7;
+$purple: #d056e6;
 //$gray: $cardin-100;
 $primary: $cardin-100;
 $secondary: $cardin-40;
@@ -20,7 +21,6 @@ $body-color: $cardin-100;
 //$coolgray-10: #F2F2F2;
 //$coolgray-30: #CCCCCC;
 //$coolgray-50: #999999;
-
 
 
 $theme-colors: map-merge(
@@ -97,8 +97,8 @@ $body-line-heights: (
 );
 
 //inputs
-$input-btn-padding-y: 1.25rem;
-$input-btn-padding-x: 1.5rem;
+//$input-btn-padding-y: 1.25rem;
+//$input-btn-padding-x: 1.5rem;
 
 //buttons
 $btn-padding-y: $input-btn-padding-y;

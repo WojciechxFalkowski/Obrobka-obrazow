@@ -1,70 +1,65 @@
 <template>
-  <div class="crud-file">
-    <h1>CRUD FILE</h1>
-    <!--    <form>-->
-    <!--      <div class="form-group">-->
-    <!--        <label>File name</label>-->
-    <!--        <input id="fileName" type="text" class="form-control">-->
-    <!--      </div>-->
-    <!--      <div class="form-group">-->
-    <!--        <label>Contents</label>-->
-    <!--        <textarea id="fileContents" class="form-control" rows="5"></textarea>-->
-    <!--      </div>-->
-    <!--    </form>-->
-    <form action="form-floating">
-      <!--      <div class="form-floating mb-3">-->
-      <!--        <input id="fileName" type="text" class="form-control" placeholder="File name">-->
-      <!--        <label for="fileName">File name</label>-->
-      <!--      </div>-->
+  <div class="container">
+    <div class="row">
+      <h1 class="col-12">CRUD FILE</h1>
 
-      <!--      <div class="form-floating">-->
-      <!--        <input id="fileContents" type="text" class="form-control" placeholder="Contents">-->
-      <!--        <label for="fileContents">Contents</label>-->
-      <!--      </div>-->
+      <div class="col-5">
+        <UploadImages :handle-open-dialog="openDialog"/>
+        <!--        <button @click="readFile" ref="btnCreate" class="btn btn-default">Create</button>-->
+        <!--        <button @click="testFunction" ref="btnRead" class="btn btn-default">Read</button>-->
+        <!--        <button ref="btnDelete" class="btn btn-default">Delete</button>-->
 
-      <!--            <div class="form-floating">-->
-      <input @change="previewFiles" ref="imageRef" id="fileContents" type="file" multiple class=""
-             placeholder="Contents">
-      <!--            </div>-->
-    </form>
-    <button @click="readFile" ref="btnCreate" class="btn btn-default">Create</button>
-    <button @click="testFunction" ref="btnRead" class="btn btn-default">Read</button>
-    <button ref="btnDelete" class="btn btn-default">Delete</button>
+        <!--    <div :style="{height:'500px',width:'500px',backgroundColor:'rgba(0,0,0,0.1)'}">-->
+        <!--      <img v-if="images.length>0" :src="images[0].path" alt="">-->
+        <!--    </div>-->
 
-    <div :style="{height:'500px',width:'500px',backgroundColor:'rgba(0,0,0,0.1)'}">
-      <img v-if="images.length>0" :src="images[0].path" alt="">
+        <!--        <img v-for="(image,index) of getImages" :key="index" :src="image.path" alt="">-->
+      </div>
+
+      <div class="col-7">
+        <ImagesList :uploadedImages="uploadedImages" :delete-uploaded-image="deleteUploadedImage"/>
+      </div>
     </div>
 
-    <img v-for="(image,index) of getImages" :key="index" :src="image.path" alt="">
 
   </div>
 </template>
 <script>
 
+import ImagesList from "../components/ImagesList";
+import UploadImages from "../components/UploadImages";
+
 export default {
   name: 'About',
+  components: {
+    ImagesList,
+    UploadImages
+  },
   data() {
     return {
-      images: []
+      uploadedImages: []
     }
   },
   mounted() {
     console.log('mounted')
-    window.customAPI.ipcRenderer.invoke('app:get-files').then((files = []) => {
-      console.log(files)
-      this.images = [...files]
-    });
+    this.getUploadedFiles()
+
 
   },
   computed: {
     getImages() {
-      return this.images;
+      return this.uploadedImages
     }
   },
 
   methods: {
     addFiles() {
 
+    },
+    sortImages(images) {
+      return images.sort((a, b) => {
+        return a.name - b.name
+      });
     },
     readFile() {
       console.log('readFile')
@@ -88,6 +83,21 @@ export default {
       // event.target.files.forEach(file=>{
       //   console.log(file)
       // })
+    },
+    deleteUploadedImage(filepath) {
+      window.customAPI.ipcRenderer.invoke('app:on-file-delete', {filepath}).then(() => {
+        this.getUploadedFiles()
+      });
+    },
+    getUploadedFiles() {
+      window.customAPI.ipcRenderer.invoke('app:get-files').then((files = []) => {
+        this.uploadedImages = this.sortImages(files)
+      });
+    },
+    openDialog() {
+      window.customAPI.ipcRenderer.invoke('app:on-fs-dialog-open').then(() => {
+        this.getUploadedFiles()
+      });
     },
     testFunction() {
       console.log(window)
