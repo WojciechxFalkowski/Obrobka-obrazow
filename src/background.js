@@ -240,6 +240,8 @@ ipcMain.handle('app:get-files', () => {
 
 // listen to file(s) add event
 ipcMain.handle('app:on-file-add', (event, files = []) => {
+    console.log('DODANE PLIKI')
+    console.log(files)
     io.addFiles(files);
 });
 
@@ -248,7 +250,6 @@ ipcMain.handle('app:on-fs-dialog-open', (event) => {
     const files = dialog.showOpenDialogSync({
         properties: ['openFile', 'multiSelections'],
     });
-
     io.addFiles(files.map(filepath => {
         return {
             name: path.parse(filepath).base,

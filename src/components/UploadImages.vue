@@ -1,30 +1,48 @@
 <template>
-  <div class="upload-images">
+  <div @dragover="dragover" @dragleave="dragleave" @drop="drop" class="upload-images">
     <div class="upload-images__icon-wrapper">
       <img class="upload-images__icon" src="./../assets/img/upload.svg" alt="">
       <p class="mt-2 fw-bold text-uppercase text-purple">Przeciągnij pliki do dodania</p>
     </div>
 
-    <!--    <input @change="previewFiles" ref="imageRef" id="fileContents" type="file" multiple class="">-->
     <button class="upload-images__btn" @click="handleOpenDialog">Dodaj plik</button>
   </div>
 </template>
 
 <script>
 
+
 export default {
   name: "UploadImages",
-  props: ['handleOpenDialog'],
+  props: ['handleOpenDialog', 'handleAddFiles'],
   methods: {
-    previewFiles(event) {
-      console.log(event.target.files);
-      this.images = Object.values(event.target.files)
-      console.log(Object.values(event.target.files));
-      console.log(typeof event.target.files[0]);
-      // event.target.files.forEach(file=>{
-      //   console.log(file)
-      // })
+    dragover(event) {
+      event.preventDefault();
+      // Add some visual fluff to show the user can drop its files
+      if (!event.currentTarget.classList.contains('bg-green-300')) {
+        event.currentTarget.classList.remove('bg-gray-100');
+        event.currentTarget.classList.add('bg-green-300');
+      }
     },
+    dragleave(event) {
+      event.currentTarget.classList.add('bg-gray-100');
+      event.currentTarget.classList.remove('bg-green-300');
+    },
+    drop(event) {
+      event.preventDefault();
+      const fileList = event.dataTransfer.files
+      event.currentTarget.classList.add('bg-gray-100');
+      event.currentTarget.classList.remove('bg-green-300');
+      const files = []
+      for (const [, value] of Object.entries(fileList)) {
+        files.push({
+          name: value.name,
+          path: value.path
+        })
+      }
+      this.handleAddFiles(files)
+    },
+
   }
 }
 </script>

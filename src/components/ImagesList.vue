@@ -1,7 +1,8 @@
 <template>
   <div class="images-list">
     <ul class="list-group images-list__container">
-      <li class="list-group-item d-flex justify-content-between align-items-center"
+      <li
+          class="list-group-item images-list__item d-flex justify-content-between align-items-center"
           v-for="(uploadedImage,index) of uploadedImages"
           :key="index">
         <img class="img-thumbnail" :src="uploadedImage.path" :alt="uploadedImage.name">
@@ -31,6 +32,15 @@ export default {
     return {
       helloWorld: 'Hello World'
     }
+  },
+  methods: {
+    handleClick() {
+      console.log('clicked')
+      console.log(this)
+      console.log(this.$router)
+      console.log(this.$route)
+      this.$router.push('/')
+    }
   }
 }
 </script>
@@ -48,6 +58,11 @@ p {
     overflow-y: scroll;
     height: 100%;
   }
+
+  //&__item:hover {
+  //  opacity: 0.5;
+  //  cursor: pointer;
+  //}
 
   .img-thumbnail {
     height: 80px;
