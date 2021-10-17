@@ -17,6 +17,14 @@
             <img @click="deleteUploadedImage(uploadedImage.path)" class="icon" src="./../assets/img/delete.svg"
                  alt="delete document icon">
             <img class="icon" src="./../assets/img/open.svg" alt="open document icon">
+
+            <svg @click="(e)=>addToActiveFiles(e,index)" class="icon images-list__add-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <g id="_8.add" data-name="8.add">
+                <circle class="cls-1" cx="12" cy="12" r="11"/>
+                <path class="cls-1" d="M12 6v12M18 12H6"/>
+              </g>
+            </svg>
+
           </div>
         </div>
       </li>
@@ -25,6 +33,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: "ImagesList.vue",
   props: ['uploadedImages', 'deleteUploadedImage'],
@@ -34,18 +44,32 @@ export default {
     }
   },
   methods: {
-    handleClick() {
-      console.log('clicked')
-      console.log(this)
-      console.log(this.$router)
-      console.log(this.$route)
-      this.$router.push('/')
+    // handleClick() {
+    //   console.log('clicked')
+    //   console.log(this)
+    //   console.log(this.$router)
+    //   console.log(this.$route)
+    //   this.$router.push('/')
+    // },
+    ...mapActions({addModel:'activeImages/addModel'}),
+    addToActiveFiles(event,index){
+      console.log(this.$store);
+      this.addModel(this.uploadedImages[index]);
+      // this.$store.dispatch('addImage',this.uploadedImages[index])
+      console.log(this.$store.getters['activeImages/getImages'])
+      // this.$store.commit('increment')
+      // console.log(this.$store.getters())
+      // console.log(this.$store.state.count)
+      // console.log(this.uploadedImages[index])
+      event.target.classList.add('disabled')
     }
   }
 }
 </script>
 
 <style lang="scss">
+@import '../assets/scss/_variables.scss';
+
 p {
   margin-bottom: unset;
 }
@@ -54,9 +78,13 @@ p {
   height: 100%;
 
   &__container {
-    max-height: 80vh;
+    max-height: 70vh;
     overflow-y: scroll;
-    height: 100%;
+    height: calc(100% - 38px);
+  }
+
+  button {
+    margin-top: 2rem;
   }
 
   //&__item:hover {
@@ -81,9 +109,38 @@ p {
   }
 
   .icon {
-    width: 16px;
+    width: 1rem;
     cursor: pointer;
     margin: 0 10px;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+
+  &__add-icon {
+    & path, & circle {
+      fill: none;
+      stroke: #000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2px;
+    }
+
+    &:hover {
+      opacity: 1;
+
+      & path, & circle {
+        stroke: $turquoise;
+      }
+    }
+
+    &.disabled {
+      visibility: hidden;
+    }
+    & *{
+      pointer-events: none;
+    }
   }
 }
 </style>

@@ -4,7 +4,7 @@
       <h1 class="col-12">Pliki</h1>
 
       <div class="col-5">
-        <UploadImages :handle-open-dialog="openDialog" handle-add-files="addFiles"/>
+        <UploadImages :handle-open-dialog="openDialog" :handle-add-files="addFiles"/>
         <!--        <button @click="readFile" ref="btnCreate" class="btn btn-default">Create</button>-->
         <!--        <button @click="testFunction" ref="btnRead" class="btn btn-default">Read</button>-->
         <!--        <button ref="btnDelete" class="btn btn-default">Delete</button>-->
@@ -70,7 +70,7 @@ export default {
       // window.ipc.send('READ_FILE', payload);
     },
     previewFiles(event) {
-      console.log(event.target.files);
+      // console.log(event.target.files);
       this.images = Object.values(event.target.files)
       console.log(Object.values(event.target.files));
       console.log(typeof event.target.files[0]);
@@ -85,6 +85,7 @@ export default {
     },
     getUploadedFiles() {
       window.customAPI.ipcRenderer.invoke('app:get-files').then((files = []) => {
+        console.log(files)
         this.uploadedImages = this.sortImages(files)
       });
     },

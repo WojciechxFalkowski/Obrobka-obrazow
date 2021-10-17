@@ -25,8 +25,8 @@ const MenuItems = electron.MenuItem;
 async function createWindow() {
     // Create the browser window.
     const win = new BrowserWindow({
-        width: 1400,
-        height: 800,
+        width: 1800,
+        height: 1000,
         webPreferences: {
 
             // Use pluginOptions.nodeIntegration, leave this alone
@@ -212,6 +212,7 @@ app.on('ready', async () => {
         }
     }
     createWindow();
+    // createWindow();
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -240,8 +241,6 @@ ipcMain.handle('app:get-files', () => {
 
 // listen to file(s) add event
 ipcMain.handle('app:on-file-add', (event, files = []) => {
-    console.log('DODANE PLIKI')
-    console.log(files)
     io.addFiles(files);
 });
 

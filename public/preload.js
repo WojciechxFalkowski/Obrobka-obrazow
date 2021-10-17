@@ -1,4 +1,4 @@
-const {contextBridge, ipcRenderer, app} = require('electron');
+const {contextBridge, ipcRenderer} = require('electron');
 const dom = require('./dom');
 const path = require("path");
 // const cv = require('./utils/opencv');
@@ -9,7 +9,10 @@ contextBridge.exposeInMainWorld(
         ipcRenderer: {...ipcRenderer},
         file: {...dom},
         uploadPath: path.join(__dirname, 'uploads'),
-        // cv:{...cv}
+        cv: {
+            abc: 'dupa',
+            // ass:cv
+        }
 
     }
     // 'ipc', {
