@@ -6,7 +6,19 @@ const path = require("path");
 // const validChannels = ['READ_FILE', 'WRITE_FILE','TEST_IPC-MAIN'];
 contextBridge.exposeInMainWorld(
     'customAPI', {
-        ipcRenderer: {...ipcRenderer},
+        ipcRenderer: {
+            ...ipcRenderer, customSend: (channel, data) => {
+                // if (validChannels.includes(channel)) {
+                ipcRenderer.send(channel, data);
+                // }
+            },
+            customOn: (channel, func) => {
+                // if (validChannels.includes(channel)) {
+                // Strip event as it includes `sender` and is a security risk
+                ipcRenderer.on(channel, (event, ...args) => func(...args));
+                // }
+            },
+        },
         file: {...dom},
         uploadPath: path.join(__dirname, 'uploads'),
         cv: {

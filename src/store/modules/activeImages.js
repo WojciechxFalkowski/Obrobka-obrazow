@@ -12,6 +12,13 @@ const state = () => ({
 const getters = {
     getImages: (state) => {
         return state.imagesCollection
+    },
+    getActiveImages: (state) => {
+        const activeImages = []
+        state.imagesCollection.forEach(imageModel => {
+            activeImages.push(...imageModel.images.filter(image => image.isActive))
+        })
+        return activeImages
     }
 }
 

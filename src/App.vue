@@ -1,13 +1,43 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link>
-      |
-      <router-link to="/files">Pliki</router-link>
+
+      <router-link v-for="path of paths" :to="path.to" :key="path.to">
+        {{ path.name }}
+      </router-link>
+      <!--      <router-link to="/">Home</router-link>-->
+      <!--      |-->
+      <!--      <router-link to="/files">Pliki</router-link>-->
     </div>
     <router-view/>
   </div>
 </template>
+
+<script>
+
+export default {
+  name: 'App',
+  data() {
+    return {
+      paths: [
+        {
+          to: '/',
+          name: 'Home'
+        },
+        {
+          to: '/files',
+          name: 'Pliki'
+        },
+        {
+          to: '/test',
+          name: 'Test'
+        }
+      ]
+    }
+  }
+}
+
+</script>
 
 <style lang="scss">
 //@import 'node_modules/bootstrap/scss/bootstrap.scss';

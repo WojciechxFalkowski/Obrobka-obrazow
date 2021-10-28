@@ -20,3 +20,15 @@ export const createCanvasImage = () => {
 // Draw image data to the canvas
     ctx.putImageData(imageData, 20, 20);
 }
+// let imgData = new ImageData(uint, dst.cols);
+// imgData.data = uint;
+// console.log('imgData')
+// console.log(imgData)
+// ctx.beginPath();
+// ctx.rect(20, 20, 150, 100);
+// ctx.stroke();
+// ctx.beginPath();
+// ctx.rect(100, 100, 150, 100);
+// ctx.stroke();
+//
+// ctx.putImageData(imgData, 0, 0)

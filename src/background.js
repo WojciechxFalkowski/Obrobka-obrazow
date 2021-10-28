@@ -11,7 +11,7 @@ const fs = require('fs');
 
 // local dependencies
 const io = require('./main_process/io');
-
+const rightClickMenu = require('./main_process/right_click_menu');
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -70,9 +70,10 @@ async function createWindow() {
             label: 'demo',
             submenu: [
                 {
-                    label: 'sabmenu1',
+                    label: 'duplicate',
                     click: function () {
-                        console.log('clicked submenu 1')
+                        console.log('images:duplicate');
+                            win.webContents.send('images:duplicate')
                     }
                 },
                 {
@@ -116,21 +117,12 @@ async function createWindow() {
     Menu.setApplicationMenu(menu)
 
     const ctxMenu = new Menu();
-    ctxMenu.append(new MenuItems({
-        label: 'Hello',
-        click: function () {
-            console.log('Context menu item clicked')
-        }
-    }))
-    ctxMenu.append(new MenuItems({
-        role: 'selectAll',
-    }));
-    ctxMenu.append(new MenuItems({
-        role: 'toggleDevTools',
-    }));
-    ctxMenu.append(new MenuItems({
-        role: 'forceReload',
-    }))
+    console.log('abc')
+    console.log(rightClickMenu.getMenuItems())
+    rightClickMenu.getMenuItems().forEach(rightClickMenuItem => {
+        ctxMenu.append(new MenuItems(rightClickMenuItem))
+    })
+
     win.webContents.on('context-menu', function (e, params) {
         ctxMenu.popup(win, params.x, params.y)
     })
@@ -275,4 +267,17 @@ ipcMain.on('app:on-file-copy', (event, file) => {
         file: file.filepath,
         icon: path.resolve(__dirname, './resources/paper.png'),
     });
+});
+
+//TEST
+ipcMain.on('asynchronous-message', function (evt, message) {
+
+    if (message.text === 'createNewWindow') {
+
+        console.log('Message received.')
+        console.log(message)
+        evt.reply('asynchronous-reply', {a:'A',id:message.id,text:message.text})
+        // Message received.
+        // Create new window here.
+    }
 });

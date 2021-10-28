@@ -1,22 +1,44 @@
 <template>
-  <canvas class="border" id="canvasHistogram" width="256" height="150"></canvas>
+  <div>
+    <canvas v-for="image of activeImages" :key="image.id" class="border" id="canvasHistogram" width="256" height="150"></canvas>
+  </div>
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
   name: "ImageHistogram",
+  props: ['activeImages','imageModelId'],
+  mounted() {
+    console.log('mounted ImageHistogram')
+    console.log(this.getImagesCollection)
+
+    // this.getImagesCollection.forEach(imageModel => {
+
+    // })
+  },
   updated() {
-    console.log('update')
+    console.log('ImageHistogram');
+    console.log(this.activeImages)
+    this.activeImages.forEach(image => {
+      const imageElId = `image_${this.imageModelId}_${image.id}`
+      console.log(this.getImageData(imageElId))
+      this.processImage(this.getImageData(imageElId), imageElId)
+    })
+  },
+  computed: {
+    ...mapGetters({getImagesCollection: 'activeImages/getImages'})
   },
   methods: {
-    getImageData(el) {
+    getImageData(imageElId) {
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
-      const img = document.getElementById(el);
-      canvas.width = img.width;
-      canvas.height = img.height;
-      context.drawImage(img, 0, 0);
-      return context.getImageData(0, 0, img.width, img.height);
+      const image = document.getElementById(imageElId);
+      canvas.width = image.width;
+      canvas.height = image.height;
+      context.drawImage(image, 0, 0);
+      return context.getImageData(0, 0, image.width, image.height);
     },
     processImage(inImg) {
       // const width = inImg.width;
@@ -59,8 +81,14 @@ export default {
           }
         }
       }
+      // console.log('histBrightness')
+      // console.log(histBrightness)
+      // console.log(histR)
+      // console.log(histG)
+      // console.log(histB)
 
       const canvas = document.getElementById('canvasHistogram');
+      // const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       let guideHeight = 8;
       let startY = (canvas.height - guideHeight);
