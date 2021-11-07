@@ -16,7 +16,7 @@
         <div class="col-8 d-flex home__image-wrapper pb-2" ref="imageWrapperRef">
           <img :key="image.id" v-for="image of imageModel.images" :class="image.isActive?'active':''"
                @click="toggleImageActivity({modelId:imageModel.id,imageId:image.id})"
-               :src="image.path"
+               :src="image.imageData?image.imageData:image.path"
                :data-title="image.id"
                class="home__default-image p-2" alt="img"
                id="canvasInput" width="512" height="512"/>
@@ -55,10 +55,10 @@ export default {
     ...mapGetters({getImagesCollection: 'activeImages/getImages',getActiveImages:'activeImages/getActiveImages'})
   },
   mounted() {
-    window.customAPI.ipcRenderer.customOn('images:duplicate', () => {
-      console.log('images:duplicate')
-      console.log(this.getActiveImages)
-    })
+    // window.customAPI.ipcRenderer.customOn('images:duplicate', () => {
+    //   console.log('images:duplicate')
+    //   console.log(this.getActiveImages)
+    // })
     // console.log('mounted')
     // console.log(this.$store.getters['activeImages/getImages'])
   },

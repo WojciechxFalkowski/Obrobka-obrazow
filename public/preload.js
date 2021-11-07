@@ -18,6 +18,13 @@ contextBridge.exposeInMainWorld(
                 ipcRenderer.on(channel, (event, ...args) => func(...args));
                 // }
             },
+            customRemoveAllListeners: (channel) => {
+                // if (validChannels.includes(channel)) {
+                // Strip event as it includes `sender` and is a security risk
+                ipcRenderer.removeAllListeners(channel);
+                // }
+            },
+
         },
         file: {...dom},
         uploadPath: path.join(__dirname, 'uploads'),

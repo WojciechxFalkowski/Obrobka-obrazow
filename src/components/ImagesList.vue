@@ -18,7 +18,8 @@
                  alt="delete document icon">
             <img class="icon" src="./../assets/img/open.svg" alt="open document icon">
 
-            <svg @click="(e)=>addToActiveFiles(e,index)" class="icon images-list__add-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <svg @click="(e)=>addToActiveFiles(e,index)" class="icon images-list__add-icon"
+                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <g id="_8.add" data-name="8.add">
                 <circle class="cls-1" cx="12" cy="12" r="11"/>
                 <path class="cls-1" d="M12 6v12M18 12H6"/>
@@ -33,34 +34,19 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import {mapActions} from 'vuex';
+import {convertImgToDataUrl} from "../imageOperations/imageOperations";
 
 export default {
   name: "ImagesList.vue",
   props: ['uploadedImages', 'deleteUploadedImage'],
-  data() {
-    return {
-      helloWorld: 'Hello World'
-    }
-  },
+  data() {},
   methods: {
-    // handleClick() {
-    //   console.log('clicked')
-    //   console.log(this)
-    //   console.log(this.$router)
-    //   console.log(this.$route)
-    //   this.$router.push('/')
-    // },
-    ...mapActions({addModel:'activeImages/addModel'}),
-    addToActiveFiles(event,index){
-      console.log(this.$store);
-      this.addModel(this.uploadedImages[index]);
-      // this.$store.dispatch('addImage',this.uploadedImages[index])
-      console.log(this.$store.getters['activeImages/getImages'])
-      // this.$store.commit('increment')
-      // console.log(this.$store.getters())
-      // console.log(this.$store.state.count)
-      // console.log(this.uploadedImages[index])
+    ...mapActions({addModel: 'activeImages/addModel'}),
+    addToActiveFiles(event, index) {
+      const newImage = new Image();
+      newImage.src = this.uploadedImages[index].path;
+      this.addModel({...this.uploadedImages[index], imageData: convertImgToDataUrl(newImage)});
       event.target.classList.add('disabled')
     }
   }
@@ -138,7 +124,8 @@ p {
     &.disabled {
       visibility: hidden;
     }
-    & *{
+
+    & * {
       pointer-events: none;
     }
   }

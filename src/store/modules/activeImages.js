@@ -4,6 +4,8 @@
 //     activeImages: [],
 //     customImages: []
 // }
+// import {convertImgToDataUrl} from "../../imageOperations/imageOperations";
+
 const state = () => ({
     imagesCollection: []
 })
@@ -34,12 +36,16 @@ const mutations = {
         })
     },
     addModel(state, image) {
+        // console.log('mutation')
+        // console.log(image)
+        // console.log(convertImgToDataUrl(image.))
+
         state.imagesCollection.push({
             id: state.imagesCollection.length,
             images: [{
+                ...image,
                 id: 0,
                 isActive: false,
-                ...image
             }],
         })
     },

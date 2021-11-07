@@ -5,6 +5,7 @@ import {createProtocol} from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, {VUEJS_DEVTOOLS} from 'electron-devtools-installer'
 import * as electron from "electron";
 import path from 'path';
+import {convertToCanvas} from "./imageOperations/imageOperations";
 
 const {ipcMain} = require('electron');
 const fs = require('fs');
@@ -67,19 +68,19 @@ async function createWindow() {
             ]
         },
         {
-            label: 'demo',
+            label: 'Obraz',
             submenu: [
                 {
-                    label: 'duplicate',
+                    label: 'Duplikuj aktywne',
                     click: function () {
                         console.log('images:duplicate');
-                            win.webContents.send('images:duplicate')
+                        win.webContents.send('images:duplicate')
                     }
                 },
                 {
-                    label: 'sabmenu2',
+                    label: 'Zapisz obraz',
                     click: function () {
-                        console.log('clicked submenu 2')
+                        win.webContents.send('images:save')
                     }
                 },
                 {
@@ -131,6 +132,49 @@ async function createWindow() {
 // watch files
     io.watchFiles(win);
 
+    ipcMain.on('app:save-image', (event, activeImages) => {
+        console.log('on app:save-image')
+        // console.log(event)
+        console.log(activeImages)
+        console.log(activeImages[0])
+
+        if (activeImages.length > 1) {
+            dialog.showErrorBox('ERROR', 'Można zapisać na raz tylko jedno zdjęcie.')
+        } else if (activeImages.length === 1) {
+            const activeImage = activeImages[0];
+            const url = activeImage.imageData;
+            if (!url) {
+                dialog.showErrorBox('ERROR', 'Zdjęcię nie posiada wartości "imageData".')
+                return;
+            }
+            dialog.showSaveDialog(win, {
+                title: 'Title',
+                defaultPath: 'Capture',
+                filters: [{name: 'Images', extensions: ['png', 'jpg']}],
+            }).then(res => {
+                console.log('data')
+                console.log(res)
+
+                // remove Base64 stuff from the Image
+                const base64Data = url.replace(/^data:image\/png;base64,/, "");
+                fs.writeFile(res.filePath, base64Data, 'base64', function (err) {
+                    if (err) {
+                        console.log(err);
+                        dialog.showErrorBox('ERROR', 'Nie można zapisać zdjęcia.')
+                    } else {
+                        dialog.showMessageBox(win, {
+                            title: 'Obraz',
+                            message: 'Zapisano zdjęcię.'
+                        })
+                    }
+
+                });
+            })
+        } else {
+            dialog.showErrorBox('ERROR', 'Zapisanie zdjęcia nie powiodło się.')
+        }
+
+    })
 }
 
 ipcMain.on('TEST_IPC-MAIN', (event, payload) => {
@@ -276,7 +320,7 @@ ipcMain.on('asynchronous-message', function (evt, message) {
 
         console.log('Message received.')
         console.log(message)
-        evt.reply('asynchronous-reply', {a:'A',id:message.id,text:message.text})
+        evt.reply('asynchronous-reply', {a: 'A', id: message.id, text: message.text})
         // Message received.
         // Create new window here.
     }

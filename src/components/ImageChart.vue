@@ -1,46 +1,37 @@
 <template>
-  <div>
-    <div>
-<!--      <ImageChart v-for="activeImage of activeImages" :imageId="'image_'+imageModelId+'_'+activeImage.id" :imageModelId="imageModelId" :activeImage="activeImage" :key="activeImage.id"/>-->
-<!--      <canvas v-for="image of activeImages" :key="image.id" class="border" width="256"-->
-<!--              height="256"></canvas>-->
+  <div class="">
+    <!--    <canvas :id="getCanvasId"></canvas>-->
+    <img v-if="imageData.length>0" :src="imageData" alt="chart">
+
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+      <label class="form-check-label" for="inlineRadio1">Black</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+      <label class="form-check-label" for="inlineRadio2">RGB</label>
     </div>
   </div>
 </template>
 
 <script>
-import {mapGetters} from "vuex";
-// import ImageChart from './ImageChart';
+import {convertToImage} from './../imageOperations/imageOperations'
+
 export default {
-  name: "ImageHistogram",
-  props: ['activeImages', 'imageModelId'],
-  components:{
-    // ImageChart
-  },
-  mounted() {
-    // console.log('mounted ImageHistogram')
-    // console.log(this.getImagesCollection)
-
-    // this.getImagesCollection.forEach(imageModel => {
-
-    // })
-  },
-  updated() {
-    console.log('ImageHistogram');
-    console.log(this.activeImages)
-    // this.activeImages.forEach(image => {
-    //   const imageElId = `image_${this.imageModelId}_${image.id}`
-    //   // console.log(this.getImageData(imageElId))
-    //   this.processImage(this.getImageData(imageElId), imageElId)
-    // })
-  },
-  computed: {
-    ...mapGetters({getImagesCollection: 'activeImages/getImages'}),
-    abc(){
-      console.log('this.activeImages')
-      console.log(this.activeImages)
-      return this.activeImages
+  name: "ImageChart",
+  props: ['imageId', 'activeImage', 'imageModelId'],
+  data() {
+    return {
+      imageData: '',
+      isBlackChart: true,
     }
+  },
+  created() {
+    console.log('created ImageChart')
+    // console.log(this.getImage(this.imageId))
+    // console.log(this.processImage(this.getImage(this.imageId)))
+    // console.log(convertToImage(this.processImage(this.getImage(this.imageId))).src)
+    this.imageData = convertToImage(this.processImage(this.getImage(this.imageId))).src
   },
   methods: {
     getImageData(imageElId) {
@@ -49,22 +40,13 @@ export default {
       const image = document.getElementById(imageElId);
       canvas.width = image.width;
       canvas.height = image.height;
-      canvas.id=imageElId;
-      console.log('width && height');
-      console.log(image.width)
-      console.log(image.height)
+      canvas.id = imageElId;
       context.drawImage(image, 0, 0);
       return context.getImageData(0, 0, image.width, image.height);
     },
     processImage(inImg) {
-      console.log('inImg');
-      console.log(inImg)
-      // eslint-disable-next-line no-unused-vars
-      const width = inImg.width;
-      // eslint-disable-next-line no-unused-vars
-      const height = inImg.height;
       const src = new Uint32Array(inImg.data.buffer);
-      const isValueHistogram = false;
+      const isValueHistogram = this.isBlackChart;
 
       let histBrightness = (new Array(256)).fill(0);
       let histR = (new Array(256)).fill(0);
@@ -101,7 +83,9 @@ export default {
         }
       }
 
-      const canvas = document.getElementById('canvasHistogram');
+      // setTimeout(()=>{
+      const canvas = document.createElement('canvas');
+      // const canvas = document.getElementById(this.getCanvasId);
       const ctx = canvas.getContext('2d');
       let guideHeight = 8;
       let startY = (canvas.height - guideHeight);
@@ -152,11 +136,21 @@ export default {
         ctx.closePath();
         ctx.stroke();
       }
+      return canvas.toDataURL()
+      // },1000)
+    },
+    getImage(imageId) {
+      return this.getImageData(imageId)
+    }
+  },
+  computed: {
+    getCanvasId() {
+      return `canvas_${this.imageModelId}_${this.activeImage.id}`
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style>
 
 </style>

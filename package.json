@@ -5,6 +5,7 @@
   "description": "Custom project",
   "author": "Wojciech Falkowski",
   "scripts": {
+    "start": "yarn run electron:serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",

@@ -54,7 +54,6 @@ exports.addFiles = (files = []) => {
     // copy `files` recursively (ignore duplicate file names)
     files.forEach(file => {
         const filePath = path.resolve(uploadPath, file.name);
-
         if (!fs.existsSync(filePath)) {
             fs.copyFileSync(file.path, filePath);
         }
