@@ -35,18 +35,20 @@
 
 <script>
 import {mapActions} from 'vuex';
-import {convertImgToDataUrl} from "../imageOperations/imageOperations";
+import {createImageBasedOnPath, convertImgToDataUrl} from "../imageOperations/imageOperations";
 
 export default {
   name: "ImagesList.vue",
   props: ['uploadedImages', 'deleteUploadedImage'],
-  data() {},
+  data() {
+    return {}
+  },
   methods: {
     ...mapActions({addModel: 'activeImages/addModel'}),
     addToActiveFiles(event, index) {
-      const newImage = new Image();
-      newImage.src = this.uploadedImages[index].path;
-      this.addModel({...this.uploadedImages[index], imageData: convertImgToDataUrl(newImage)});
+      const imageEl = createImageBasedOnPath(this.uploadedImages[index].path);
+
+      this.addModel({...this.uploadedImages[index], imageData: convertImgToDataUrl(imageEl)});
       event.target.classList.add('disabled')
     }
   }

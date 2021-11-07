@@ -18,6 +18,12 @@ export const boxFiltering = (images) => {
     })
     return filteredImages;
 }
+
+export const createImageBasedOnPath = (imagePath) => {
+    const image = new Image();
+    image.src = imagePath
+    return image
+}
 export const convertImgToDataUrl = (img) => {
     // Create canvas
     const canvas = document.createElement('canvas');

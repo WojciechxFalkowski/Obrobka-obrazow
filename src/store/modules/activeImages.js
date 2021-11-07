@@ -36,10 +36,6 @@ const mutations = {
         })
     },
     addModel(state, image) {
-        // console.log('mutation')
-        // console.log(image)
-        // console.log(convertImgToDataUrl(image.))
-
         state.imagesCollection.push({
             id: state.imagesCollection.length,
             images: [{

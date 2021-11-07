@@ -5,14 +5,15 @@ import {createProtocol} from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, {VUEJS_DEVTOOLS} from 'electron-devtools-installer'
 import * as electron from "electron";
 import path from 'path';
-import {convertToCanvas} from "./imageOperations/imageOperations";
+// import {convertToCanvas} from "./imageOperations/imageOperations";
+import {bootNavbarMenu} from "./main_process/navbarMenu";
+import {bootRightClickMenu} from "./main_process/right_click_menu";
 
 const {ipcMain} = require('electron');
 const fs = require('fs');
 
 // local dependencies
 const io = require('./main_process/io');
-const rightClickMenu = require('./main_process/right_click_menu');
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -52,81 +53,26 @@ async function createWindow() {
         // Load the index.html when not in development
         win.loadURL('app://./index.html')
     }
-    const template = [
-        {
-            label: 'Edit',
-            submenu: [
-                {role: 'undo'},
-                {role: 'redo'},
-                {role: 'separator'},
-                {role: 'cut'},
-                {role: 'copy'},
-                {role: 'paste'},
-                {role: 'pasteandmatchstyle'},
-                {role: 'delete'},
-                {role: 'selectall'},
-            ]
-        },
-        {
-            label: 'Obraz',
-            submenu: [
-                {
-                    label: 'Duplikuj aktywne',
-                    click: function () {
-                        console.log('images:duplicate');
-                        win.webContents.send('images:duplicate')
-                    }
-                },
-                {
-                    label: 'Zapisz obraz',
-                    click: function () {
-                        win.webContents.send('images:save')
-                    }
-                },
-                {
-                    label: 'sabmenu3',
-                    click: function () {
-                        console.log('clicked submenu 3')
-                    }
-                }
-            ]
-        },
-        {
-            label: 'demo 2',
-            submenu: [
-                {
-                    label: 'sabmenu 4',
-                    click: function () {
-                        console.log('clicked submenu 4')
-                    }
-                },
-                {
-                    label: 'sabmenu 5',
-                    click: function () {
-                        console.log('clicked submenu 5')
-                    }
-                },
-                {
-                    label: 'sabmenu 6',
-                    click: function () {
-                        console.log('clicked submenu 6')
-                    }
-                }
-            ]
-        }]
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu)
 
+    /**
+     * Create navbar menu
+     */
+    bootNavbarMenu(win, Menu)
+
+    /**
+     * Create right click menu
+     * @type {Electron.Menu}
+     */
     const ctxMenu = new Menu();
-    console.log('abc')
-    console.log(rightClickMenu.getMenuItems())
-    rightClickMenu.getMenuItems().forEach(rightClickMenuItem => {
-        ctxMenu.append(new MenuItems(rightClickMenuItem))
-    })
+    bootRightClickMenu(ctxMenu, MenuItems);
 
     win.webContents.on('context-menu', function (e, params) {
         ctxMenu.popup(win, params.x, params.y)
     })
+
+    /**
+     * Open dev tools on initialization applicatio.
+     */
     win.webContents.openDevTools()
 
 // watch files
