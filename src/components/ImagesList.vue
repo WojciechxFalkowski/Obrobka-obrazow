@@ -34,8 +34,12 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
-import {createImageBasedOnPath, convertImgToDataUrl} from "../imageOperations/imageOperations";
+import {mapActions, mapGetters} from 'vuex';
+import {
+  createImageBasedOnPath,
+  convertImgToDataUrl,
+  convertImgToImgData,
+} from "../imageOperations/imageOperations";
 
 export default {
   name: "ImagesList.vue",
@@ -43,12 +47,21 @@ export default {
   data() {
     return {}
   },
+  computed: {
+    ...mapGetters({getImagesCollection: 'activeImages/getImages', getActiveImages: 'activeImages/getActiveImages'})
+  },
   methods: {
     ...mapActions({addModel: 'activeImages/addModel'}),
     addToActiveFiles(event, index) {
       const imageEl = createImageBasedOnPath(this.uploadedImages[index].path);
 
-      this.addModel({...this.uploadedImages[index], imageData: convertImgToDataUrl(imageEl)});
+      this.addModel({
+        ...this.uploadedImages[index],
+        imgData: convertImgToImgData(imageEl),
+        imageDataURL: convertImgToDataUrl(imageEl)
+      });
+      console.log('addes images')
+      console.log(this.getImagesCollection)
       event.target.classList.add('disabled')
     }
   }

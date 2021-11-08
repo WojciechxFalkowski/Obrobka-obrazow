@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-<!--      <ImageChart v-for="activeImage of activeImages" :imageId="'image_'+imageModelId+'_'+activeImage.id" :imageModelId="imageModelId" :activeImage="activeImage" :key="activeImage.id"/>-->
+      <ImageChart v-for="activeImage of activeImages" :imageId="'image_'+imageModelId+'_'+activeImage.id" :imageModelId="imageModelId" :activeImage="activeImage" :key="activeImage.id"/>
 <!--      <canvas v-for="image of activeImages" :key="image.id" class="border" width="256"-->
 <!--              height="256"></canvas>-->
     </div>
@@ -10,12 +10,12 @@
 
 <script>
 import {mapGetters} from "vuex";
-// import ImageChart from './ImageChart';
+import ImageChart from './ImageChart';
 export default {
   name: "ImageHistogram",
   props: ['activeImages', 'imageModelId'],
   components:{
-    // ImageChart
+    ImageChart
   },
   mounted() {
     // console.log('mounted ImageHistogram')
@@ -36,11 +36,6 @@ export default {
   },
   computed: {
     ...mapGetters({getImagesCollection: 'activeImages/getImages'}),
-    abc(){
-      console.log('this.activeImages')
-      console.log(this.activeImages)
-      return this.activeImages
-    }
   },
   methods: {
     getImageData(imageElId) {
@@ -50,15 +45,10 @@ export default {
       canvas.width = image.width;
       canvas.height = image.height;
       canvas.id=imageElId;
-      console.log('width && height');
-      console.log(image.width)
-      console.log(image.height)
       context.drawImage(image, 0, 0);
       return context.getImageData(0, 0, image.width, image.height);
     },
     processImage(inImg) {
-      console.log('inImg');
-      console.log(inImg)
       // eslint-disable-next-line no-unused-vars
       const width = inImg.width;
       // eslint-disable-next-line no-unused-vars

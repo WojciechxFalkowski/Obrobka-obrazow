@@ -7,7 +7,7 @@ import * as electron from "electron";
 import path from 'path';
 // import {convertToCanvas} from "./imageOperations/imageOperations";
 import {bootNavbarMenu} from "./main_process/navbarMenu";
-import {bootRightClickMenu} from "./main_process/right_click_menu";
+import {bootRightClickMenu} from "./main_process/rightClickMenu";
 
 const {ipcMain} = require('electron');
 const fs = require('fs');
@@ -82,15 +82,14 @@ async function createWindow() {
         console.log('on app:save-image')
         // console.log(event)
         console.log(activeImages)
-        console.log(activeImages[0])
 
         if (activeImages.length > 1) {
             dialog.showErrorBox('ERROR', 'Można zapisać na raz tylko jedno zdjęcie.')
         } else if (activeImages.length === 1) {
             const activeImage = activeImages[0];
-            const url = activeImage.imageData;
+            const url = activeImage.imageDataURL;
             if (!url) {
-                dialog.showErrorBox('ERROR', 'Zdjęcię nie posiada wartości "imageData".')
+                dialog.showErrorBox('ERROR', 'Zdjęcię nie posiada wartości "imageDataURL".')
                 return;
             }
             dialog.showSaveDialog(win, {

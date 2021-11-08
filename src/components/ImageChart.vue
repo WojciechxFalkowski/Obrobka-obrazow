@@ -4,11 +4,13 @@
     <img v-if="imageData.length>0" :src="imageData" alt="chart">
 
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" :value="BLACK_VALUE"
+             v-model="selectedInputRatioValue">
       <label class="form-check-label" for="inlineRadio1">Black</label>
     </div>
     <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" :value="RGB_VALUE"
+             v-model="selectedInputRatioValue">
       <label class="form-check-label" for="inlineRadio2">RGB</label>
     </div>
   </div>
@@ -23,21 +25,32 @@ export default {
   data() {
     return {
       imageData: '',
-      isBlackChart: true,
+      BLACK_VALUE: 'BLACK',
+      RGB_VALUE: 'RGB',
+      selectedInputRatioValue: 'BLACK',
     }
   },
-  created() {
+  mounted() {
     console.log('created ImageChart')
+    console.log('selectedInputRatioValue')
+    console.log(this.selectedInputRatioValue)
     // console.log(this.getImage(this.imageId))
     // console.log(this.processImage(this.getImage(this.imageId)))
     // console.log(convertToImage(this.processImage(this.getImage(this.imageId))).src)
     this.imageData = convertToImage(this.processImage(this.getImage(this.imageId))).src
+  },
+  updated() {
+    console.log('updated')
+    // console.log(this.selectedInputRatioValue)
+
   },
   methods: {
     getImageData(imageElId) {
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
       const image = document.getElementById(imageElId);
+      // console.log('getImageData')
+      // console.log(image)
       canvas.width = image.width;
       canvas.height = image.height;
       canvas.id = imageElId;
@@ -46,7 +59,7 @@ export default {
     },
     processImage(inImg) {
       const src = new Uint32Array(inImg.data.buffer);
-      const isValueHistogram = this.isBlackChart;
+      const isValueHistogram = this.selectedInputRatioValue === this.BLACK_VALUE;
 
       let histBrightness = (new Array(256)).fill(0);
       let histR = (new Array(256)).fill(0);
@@ -65,25 +78,12 @@ export default {
       }
 
       let maxBrightness = 0;
-      if (isValueHistogram) {
-        for (let i = 1; i < 256; i++) {
-          if (maxBrightness < histBrightness[i]) {
-            maxBrightness = histBrightness[i]
-          }
-        }
-      } else {
-        for (let i = 0; i < 256; i++) {
-          if (maxBrightness < histR[i]) {
-            maxBrightness = histR[i]
-          } else if (maxBrightness < histG[i]) {
-            maxBrightness = histG[i]
-          } else if (maxBrightness < histB[i]) {
-            maxBrightness = histB[i]
-          }
+      for (let i = 1; i < 256; i++) {
+        if (maxBrightness < histBrightness[i]) {
+          maxBrightness = histBrightness[i]
         }
       }
 
-      // setTimeout(()=>{
       const canvas = document.createElement('canvas');
       // const canvas = document.getElementById(this.getCanvasId);
       const ctx = canvas.getContext('2d');
@@ -108,6 +108,7 @@ export default {
         } else {
           // Red
           ctx.strokeStyle = "rgba(220,0,0,0.5)";
+
           ctx.beginPath();
           ctx.moveTo(x, startY);
           ctx.lineTo(x, startY - histR[i] * dy);
@@ -115,6 +116,7 @@ export default {
           ctx.stroke();
           // Green
           ctx.strokeStyle = "rgba(0,210,0,0.5)";
+
           ctx.beginPath();
           ctx.moveTo(x, startY);
           ctx.lineTo(x, startY - histG[i] * dy);
@@ -122,6 +124,7 @@ export default {
           ctx.stroke();
           // Blue
           ctx.strokeStyle = "rgba(0,0,255,0.5)";
+
           ctx.beginPath();
           ctx.moveTo(x, startY);
           ctx.lineTo(x, startY - histB[i] * dy);
@@ -137,7 +140,6 @@ export default {
         ctx.stroke();
       }
       return canvas.toDataURL()
-      // },1000)
     },
     getImage(imageId) {
       return this.getImageData(imageId)
@@ -146,6 +148,12 @@ export default {
   computed: {
     getCanvasId() {
       return `canvas_${this.imageModelId}_${this.activeImage.id}`
+    }
+  },
+  watch: {
+    selectedInputRatioValue: function () {
+      console.log('selectedInputRatioValue changed');
+      this.imageData = convertToImage(this.processImage(this.getImage(this.imageId))).src
     }
   }
 }

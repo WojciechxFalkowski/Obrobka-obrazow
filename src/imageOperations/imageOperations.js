@@ -13,7 +13,7 @@ export const boxFiltering = (images) => {
 
             const canvasImage = convertToCanvas(dst, imageModel.images.length);
             const newImage = convertToImage(canvasImage.toDataURL())
-            filteredImages.push({modelId: imageModel.id, image: {imageData: newImage.src}})
+            filteredImages.push({modelId: imageModel.id, image: {imageDataURL: newImage.src}})
         })
     })
     return filteredImages;
@@ -23,6 +23,18 @@ export const createImageBasedOnPath = (imagePath) => {
     const image = new Image();
     image.src = imagePath
     return image
+}
+export const convertImgToImgData = (img) => {
+    // Create canvas
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    // Set width and height
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // Draw the image
+    // ctx.drawImage(img, 0, 0);
+    return ctx.getImageData(0, 0, img.width, img.height);
 }
 export const convertImgToDataUrl = (img) => {
     // Create canvas
@@ -57,6 +69,8 @@ export const convertToImage = (imagePath) => {
     const newImage = document.createElement("img"); // create img tag
     newImage.src = imagePath;
 
+    // console.log('imagePath')
+    // console.log(imagePath)
     return newImage;
 }
 export const unsharpMasking = (images) => {
@@ -75,7 +89,7 @@ export const unsharpMasking = (images) => {
 
             const canvasImage = convertToCanvas(dst, imageModel.images.length);
             const newImage = convertToImage(canvasImage.toDataURL())
-            filteredImages.push({modelId: imageModel.id, image: {imageData: newImage.src}})
+            filteredImages.push({modelId: imageModel.id, image: {imageDataURL: newImage.src}})
         })
     })
     return filteredImages
@@ -99,7 +113,7 @@ export const bilateralFiltering = (images) => {
 
             const canvasImage = convertToCanvas(dst, imageModel.images.length);
             const newImage = convertToImage(canvasImage.toDataURL())
-            filteredImages.push({modelId: imageModel.id, image: {imageData: newImage.src}})
+            filteredImages.push({modelId: imageModel.id, image: {imageDataURL: newImage.src}})
         })
     })
     return filteredImages;
@@ -138,7 +152,7 @@ export const saltAndPepper = (images) => {
 
             const canvasImage = convertToCanvas(src, imageModel.images.length);
             const newImage = convertToImage(canvasImage.toDataURL())
-            filteredImages.push({modelId: imageModel.id, image: {imageData: newImage.src}})
+            filteredImages.push({modelId: imageModel.id, image: {imageDataURL: newImage.src}})
         })
     })
     return filteredImages;
