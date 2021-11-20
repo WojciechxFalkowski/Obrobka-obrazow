@@ -1,18 +1,17 @@
 'use strict'
-
-import {app, protocol, BrowserWindow, dialog} from 'electron'
+// external dependencies
+import {app, protocol, BrowserWindow} from 'electron'
 import {createProtocol} from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, {VUEJS_DEVTOOLS} from 'electron-devtools-installer'
 import * as electron from "electron";
 import path from 'path';
-// import {convertToCanvas} from "./imageOperations/imageOperations";
-import {bootNavbarMenu} from "./main_process/navbarMenu";
-import {bootRightClickMenu} from "./main_process/rightClickMenu";
-
-const {ipcMain} = require('electron');
-const fs = require('fs');
 
 // local dependencies
+import {bootNavbarMenu} from "./main_process/navbarMenu";
+import {bootRightClickMenu} from "./main_process/rightClickMenu";
+import {bootIpcMainOn} from "./main_process/ipcMain/on";
+import {bootIpcMainHandle} from "./main_process/ipcMain/handle";
+
 const io = require('./main_process/io');
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -71,104 +70,37 @@ async function createWindow() {
     })
 
     /**
-     * Open dev tools on initialization applicatio.
+     * Open dev tools on initialization application.
      */
     win.webContents.openDevTools()
 
-// watch files
+
+    /**
+     * Watch files
+     * TODO probably its not working on macOs and it should be changed.
+     */
     io.watchFiles(win);
 
-    ipcMain.on('app:save-image', (event, activeImages) => {
-        console.log('on app:save-image')
-        // console.log(event)
-        console.log(activeImages)
+    /**
+     * Boot ipcMain on functions.
+     */
+    bootIpcMainOn(win);
 
-        if (activeImages.length > 1) {
-            dialog.showErrorBox('ERROR', 'Można zapisać na raz tylko jedno zdjęcie.')
-        } else if (activeImages.length === 1) {
-            const activeImage = activeImages[0];
-            const url = activeImage.imageDataURL;
-            if (!url) {
-                dialog.showErrorBox('ERROR', 'Zdjęcię nie posiada wartości "imageDataURL".')
-                return;
-            }
-            dialog.showSaveDialog(win, {
-                title: 'Title',
-                defaultPath: 'Capture',
-                filters: [{name: 'Images', extensions: ['png', 'jpg']}],
-            }).then(res => {
-                console.log('data')
-                console.log(res)
+    /**
+     * Boot ipcMain handle functions.
+     */
+    bootIpcMainHandle();
 
-                // remove Base64 stuff from the Image
-                const base64Data = url.replace(/^data:image\/png;base64,/, "");
-                fs.writeFile(res.filePath, base64Data, 'base64', function (err) {
-                    if (err) {
-                        console.log(err);
-                        dialog.showErrorBox('ERROR', 'Nie można zapisać zdjęcia.')
-                    } else {
-                        dialog.showMessageBox(win, {
-                            title: 'Obraz',
-                            message: 'Zapisano zdjęcię.'
-                        })
-                    }
-
-                });
-            })
-        } else {
-            dialog.showErrorBox('ERROR', 'Zapisanie zdjęcia nie powiodło się.')
-        }
-
-    })
 }
 
-ipcMain.on('TEST_IPC-MAIN', (event, payload) => {
-    console.log("TEST_IPC-MAIN")
-    console.log(payload) // prints "ping"
-    event.returnValue = "test value"
-});
-ipcMain.on('READ_FILE', (event, payload) => {
-    console.log('READ_FILE')
-    // console.log(event)
-    console.log(payload)
-    console.log(fs)
-    console.log(__dirname)
-    console.log(fs.existsSync(__dirname))
 
-    const pathName = path.join(__dirname, 'images');
-    let file = path.join(pathName, 'file1');
-    let contents = 'siemka';
-
-
-    if (!fs.existsSync(pathName)) {
-        fs.mkdirSync(pathName);
-    }
-    fs.writeFile(file, contents, function (err) {
-        console.log('BEZ BLEDU')
-        if (err) {
-            console.log(err)
-        }
-    })
-
-
-    console.log(fs.readdir('C:\\Users\\48698\\OneDrive\\Documents\\skill\\projects\\apo_wojciech_falkowski\\', (e, files) => {
-        console.log(files)
-    }))
-    console.log(fs.readdir(__dirname, (e, files) => {
-        console.log(e)
-        console.log("ee?")
-        console.log(files)
-    }))
-    // const content = fs.readFile(payload.path);
-    // console.log(content)
-    // event.reply('READ_FILE', { content });
-    event.reply('READ_FILE', {content: 'content'});
-});
-
-// Quit when all windows are closed.
+/**
+ * Quit when all windows are closed.
+ */
 app.on('window-all-closed', () => {
-    // On macOS it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
+
+    //On macOS it is common for applications and their menu bar
+    //to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
         app.quit()
     }
@@ -180,9 +112,11 @@ app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+/**
+ * This method will be called when Electron has finished
+ * initialization and is ready to create browser windows.
+ * Some APIs can only be used after this event occurs.
+ */
 app.on('ready', async () => {
     if (isDevelopment && !process.env.IS_TEST) {
         // Install Vue Devtools
@@ -192,8 +126,7 @@ app.on('ready', async () => {
             console.error('Vue Devtools failed to install:', e.toString())
         }
     }
-    createWindow();
-    // createWindow();
+    await createWindow();
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -210,63 +143,3 @@ if (isDevelopment) {
         })
     }
 }
-
-/**
- * FILES
- */
-// return list of files
-ipcMain.handle('app:get-files', () => {
-
-    return io.getFiles();
-});
-
-// listen to file(s) add event
-ipcMain.handle('app:on-file-add', (event, files = []) => {
-    io.addFiles(files);
-});
-
-// open filesystem dialog to choose files
-ipcMain.handle('app:on-fs-dialog-open', (event) => {
-    const files = dialog.showOpenDialogSync({
-        properties: ['openFile', 'multiSelections'],
-    });
-    io.addFiles(files.map(filepath => {
-        return {
-            name: path.parse(filepath).base,
-            path: filepath,
-        };
-    }));
-});
-
-/*-----*/
-
-// listen to file delete event
-ipcMain.handle('app:on-file-delete', (event, file) => {
-    io.deleteFile(file.filepath);
-});
-
-// listen to file open event
-ipcMain.on('app:on-file-open', (event, file) => {
-    io.openFile(file.filepath);
-});
-
-// listen to file copy event
-ipcMain.on('app:on-file-copy', (event, file) => {
-    event.sender.startDrag({
-        file: file.filepath,
-        icon: path.resolve(__dirname, './resources/paper.png'),
-    });
-});
-
-//TEST
-ipcMain.on('asynchronous-message', function (evt, message) {
-
-    if (message.text === 'createNewWindow') {
-
-        console.log('Message received.')
-        console.log(message)
-        evt.reply('asynchronous-reply', {a: 'A', id: message.id, text: message.text})
-        // Message received.
-        // Create new window here.
-    }
-});

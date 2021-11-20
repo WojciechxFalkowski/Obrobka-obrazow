@@ -25,6 +25,10 @@ export default {
           name: 'Home'
         },
         {
+          to: '/stretch-histogram',
+          name: 'StretchHistogram'
+        },
+        {
           to: '/files',
           name: 'Pliki'
         },

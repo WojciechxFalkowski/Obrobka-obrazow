@@ -5,7 +5,7 @@
 
     <div class="container-fluid">
       <div class="row pb-5" v-for="imageModel of getImagesCollection" :key="imageModel.id">
-        <div class="col-8 d-flex home__image-wrapper pb-2" ref="imageWrapperRef">
+        <div class="col-6 d-flex home__image-wrapper pb-2" ref="imageWrapperRef">
           <img :key="image.id" v-for="image of imageModel.images" :class="image.isActive?'active':''"
                @click="toggleImageActivity({modelId:imageModel.id,imageId:image.id})"
                :src="image.imageDataURL?image.imageDataURL:image.path"
@@ -13,9 +13,10 @@
                class="home__default-image p-2" alt="img"
                :id="'image_'+imageModel.id+'_'+image.id"/>
         </div>
-        <div class="col-4 bg-info">
+        <div class="col-6">
           <ImageHistogram :imageModelId="imageModel.id"
                           :activeImages="imageModel.images.filter(image=>image.isActive)"/>
+
         </div>
       </div>
     </div>
@@ -42,8 +43,6 @@ export default {
     return {
       imageUrl: null,
       images: [],
-      abc: "aaa",
-      a: ["A"]
     }
   },
   computed: {

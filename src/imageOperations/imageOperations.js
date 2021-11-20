@@ -24,6 +24,12 @@ export const createImageBasedOnPath = (imagePath) => {
     image.src = imagePath
     return image
 }
+/**
+ * Return ImageData object from a given Uint8ClampedArray and the size of the image it contains.
+ * https://developer.mozilla.org/en-US/docs/Web/API/ImageData
+ * @param img
+ * @returns {ImageData}
+ */
 export const convertImgToImgData = (img) => {
     // Create canvas
     const canvas = document.createElement('canvas');
@@ -33,7 +39,10 @@ export const convertImgToImgData = (img) => {
     canvas.height = img.height;
 
     // Draw the image
-    // ctx.drawImage(img, 0, 0);
+    ctx.drawImage(img, 0, 0);
+
+    //It returns a Uint8ClampedArray representing a one-dimensional array
+    // containing the data in the RGBA order, with integer values between 0 and 255 (inclusive).
     return ctx.getImageData(0, 0, img.width, img.height);
 }
 export const convertImgToDataUrl = (img) => {
@@ -72,6 +81,49 @@ export const convertToImage = (imagePath) => {
     // console.log('imagePath')
     // console.log(imagePath)
     return newImage;
+}
+export const mapPixelValuesToRGBArrays = (rgbaPixels) => {
+    let pixelArrayR = (new Array(256)).fill(0);
+    let pixelArrayG = (new Array(256)).fill(0);
+    let pixelArrayB = (new Array(256)).fill(0);
+    let pixelArrayRGB = (new Array(256)).fill(0);
+    let pixelArrayGrayScale = (new Array(256)).fill(0);
+    let maxRValue = 0;
+    let maxGValue = 0;
+    let maxBValue = 0;
+    let maxRGBValue = 0;
+    let maxGrayScaleValue = 0;
+    for (let index = 0; index < rgbaPixels.length; index += 4) {
+        //mapping data to arrays (red, green, blue, rgb) of 256 slots and count their amount
+        pixelArrayR[rgbaPixels[index]]++;
+        pixelArrayG[rgbaPixels[index + 1]]++;
+        pixelArrayB[rgbaPixels[index + 2]]++;
+        pixelArrayRGB[rgbaPixels[index]]++;
+        pixelArrayRGB[rgbaPixels[index + 1]]++;
+        pixelArrayRGB[rgbaPixels[index + 2]]++;
+        const grayScalePixel = Math.round(rgbaPixels[index] * 0.299 +rgbaPixels[index + 1] * 0.587 + rgbaPixels[index + 2] * 0.114)
+        pixelArrayGrayScale[grayScalePixel]++;
+    }
+
+    // Find max value in arrays
+    maxRValue = Math.max(...pixelArrayR);
+    maxGValue = Math.max(...pixelArrayG)
+    maxBValue = Math.max(...pixelArrayB)
+    maxRGBValue = Math.max(maxRValue, maxGValue, maxBValue)
+    maxGrayScaleValue = Math.max(...pixelArrayGrayScale)
+
+    return {
+        pixelArrayR,
+        pixelArrayG,
+        pixelArrayB,
+        pixelArrayRGB,
+        pixelArrayGrayScale,
+        maxRValue,
+        maxGValue,
+        maxBValue,
+        maxRGBValue,
+        maxGrayScaleValue
+    }
 }
 export const unsharpMasking = (images) => {
     const filteredImages = []

@@ -48,8 +48,12 @@ const mutations = {
     toggleImageActivity(state, {modelId, imageId}) {
         const activeModel = state.imagesCollection.find(imageModel => imageModel.id === modelId);
         const activeImage = activeModel.images.find(image => image.id === imageId);
-
         activeImage.isActive = !activeImage.isActive;
+        if (activeImage.isActive) {
+            activeImage.timestamp = (new Date()).getTime()
+        } else {
+            activeImage.timestamp = null;
+        }
     },
 }
 

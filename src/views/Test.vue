@@ -127,6 +127,8 @@ export default {
     //   const buffer = new Buffer(await blob.arrayBuffer());
     // },
     unsharpMaskingImageOption(images) {
+      console.log('images')
+      console.log(images)
       this.addImages(unsharpMasking(images));
     },
     bilateralFilteringImageOption(images) {
