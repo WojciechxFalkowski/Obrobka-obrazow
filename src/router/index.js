@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Test from '../views/Test.vue'
-import StretchHistogram from '../views/StretchHistogram.vue'
+import StretchHistogramPage from '../views/StretchHistogramPage.vue'
 
 Vue.use(VueRouter)
 
@@ -14,8 +14,8 @@ const routes = [
   },
   {
     path: '/stretch-histogram',
-    name: 'StretchHistogram',
-    component: StretchHistogram
+    name: 'StretchHistogramPage',
+    component: StretchHistogramPage
   },
   {
     path: '/test',

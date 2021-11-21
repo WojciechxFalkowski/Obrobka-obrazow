@@ -61,49 +61,15 @@
           <td v-for="(blue,index) of activeImage.pixelAmounts.blue" :key="index">{{ blue }}</td>
         </tr>
       </table>
-      <!--      <div class="d-flex">-->
-      <!--        <p class="mb-0">Index</p>-->
-      <!--        <div class="border" v-for="(_,index) of activeImage.pixelAmounts.red" :key="index">{{ index }}</div>-->
-      <!--      </div>-->
-      <!--      <div class="d-flex">-->
-      <!--        <p class="mb-0">Red</p>-->
-      <!--        <div class="border" v-for="(red,index) of activeImage.pixelAmounts.red" :key="index">{{ red }}</div>-->
-      <!--      </div>-->
-      <!--      <div class="d-flex">-->
-      <!--        <p class="mb-0">Green</p>-->
-      <!--        <div class="border" v-for="(green,index) of activeImage.pixelAmounts.green" :key="index">{{ green }}</div>-->
-      <!--      </div>-->
-      <!--      <div class="d-flex">-->
-      <!--        <p class="mb-0">Blue</p>-->
-      <!--        <div class="border" v-for="(blue,index) of activeImage.pixelAmounts.blue" :key="index">{{ blue }}</div>-->
-      <!--      </div>-->
     </div>
-    <!--    <div>-->
-    <!--      <div class="d-flex">-->
-    <!--        <p>Index</p>-->
-    <!--        <div class="border" v-for="(red,index) of activeImage.pixelAmounts.red" :key="index">{{ red }}</div>-->
-    <!--      </div>-->
-    <!--      <div>-->
-    <!--        <p>Red</p>-->
-    <!--        <div>Doe</div>-->
-    <!--      </div>-->
-    <!--      <div>-->
-    <!--        <p>Green</p>-->
-    <!--        <div>Doe</div>-->
-    <!--      </div>-->
-    <!--      <div>-->
-    <!--        <p>Blue</p>-->
-    <!--        <div>Doe</div>-->
-    <!--      </div>-->
-    <!--    </div>-->
   </div>
 </template>
 
 <script>
-import {convertToImage} from './../imageOperations/imageOperations'
+import {convertToImage} from '@/imageOperations/imageOperations'
 
 export default {
-  name: "ImageChart",
+  name: "ImageStatistics",
   props: ['imageId', 'activeImage', 'imageModelId'],
   data() {
     return {
@@ -121,16 +87,9 @@ export default {
   },
   mounted() {
     this.imageData = convertToImage(this.processImage()).src
-    console.log('mounted')
-    console.log(this.activeImage)
-  },
-  updated() {
-    // console.log('updated')
-    // console.log(this.selectedInputRatioValue)
   },
   methods: {
     processImage() {
-      console.log('processImage')
       const isValueHistogram = this.selectedInputRatioValue === this.GRAY_VALUE;
       let maxChartBarValue = 0;
       const pixelArrayR = this.activeImage.pixelAmounts.red
@@ -138,8 +97,6 @@ export default {
       const pixelArrayB = this.activeImage.pixelAmounts.blue
       // const pixelArrayRGB = this.activeImage.pixelAmounts.rgb
       const pixelArrayGrayScale = this.activeImage.pixelAmounts.gray
-      console.log('pixelArrayGrayScale')
-      console.log(pixelArrayGrayScale)
       if (isValueHistogram) {
         maxChartBarValue = this.activeImage.pixelAmounts.maxGrayScaleValue;
         // console.log('RGB')
@@ -225,17 +182,8 @@ export default {
           // ctx.lineTo(x, startY - (pixelArrayR[i] * 0.299 + pixelArrayG[i] * 0.587 + pixelArrayB[i] * 0.114) * blockHeight);
           ctx.closePath();
           ctx.stroke();
-          // if (i === 54) {
-          //   console.log(pixelArrayRGB[i])
-          //   console.log(pixelArrayR[i] * 0.299 + pixelArrayG[i] * 0.587 + pixelArrayB[i] * 0.114)
-          //   console.log(this.activeImage.pixelAmounts.maxRValue)
-          //   console.log(this.activeImage.pixelAmounts.maxGValue)
-          //   console.log(this.activeImage.pixelAmounts.maxBValue)
-          //   console.log(this.activeImage.pixelAmounts.maxRGBValue)
-          // }
         } else {
           // Red
-          // ctx.strokeStyle = "rgba(220,0,0,0.5)";
           if (this.selectedInputRatioValue === 'RGB' || this.selectedInputRatioValue === 'R') {
             ctx.strokeStyle = "#ff0000";
             ctx.beginPath();
@@ -247,7 +195,6 @@ export default {
 
           if (this.selectedInputRatioValue === 'RGB' || this.selectedInputRatioValue === 'G') {
             // Green
-            // ctx.strokeStyle = "rgba(0,210,0,0.5)";
             ctx.strokeStyle = "#00ff00";
             ctx.beginPath();
             ctx.moveTo(x, startY);
@@ -257,7 +204,6 @@ export default {
           }
           if (this.selectedInputRatioValue === 'RGB' || this.selectedInputRatioValue === 'B') {
             // Blue
-            // ctx.strokeStyle = "rgba(0,0,255,0.5)";
             ctx.strokeStyle = "#0000ff";
             ctx.beginPath();
             ctx.moveTo(x, startY);

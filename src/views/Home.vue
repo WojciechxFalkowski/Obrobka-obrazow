@@ -6,17 +6,22 @@
     <div class="container-fluid">
       <div class="row pb-5" v-for="imageModel of getImagesCollection" :key="imageModel.id">
         <div class="col-6 d-flex home__image-wrapper pb-2" ref="imageWrapperRef">
-          <img :key="image.id" v-for="image of imageModel.images" :class="image.isActive?'active':''"
+          <img :key="image.id" v-for="image of imageModel.images"
+               :class="image.isActive?'active':''"
                @click="toggleImageActivity({modelId:imageModel.id,imageId:image.id})"
                :src="image.imageDataURL?image.imageDataURL:image.path"
                :data-title="image.id"
                class="home__default-image p-2" alt="img"
-               :id="'image_'+imageModel.id+'_'+image.id"/>
+               :id="'image_'+imageModel.id+'_'+image.id" />
         </div>
         <div class="col-6">
-          <ImageHistogram :imageModelId="imageModel.id"
-                          :activeImages="imageModel.images.filter(image=>image.isActive)"/>
-
+          <div class="image-histogram">
+            <ImageStatistics
+              v-for="activeImage of imageModel.images.filter(image => image.isActive)"
+              :imageId="'image_'+imageModel.id+'_'+activeImage.id"
+              :imageModelId="imageModel.id" :activeImage="activeImage"
+              :key="activeImage.id" />
+          </div>
         </div>
       </div>
     </div>
@@ -25,8 +30,8 @@
 
 <script>
 // @ is an alias to /src
-import ImageHistogram from "./../components/ImageHistogram"
-import {mapActions, mapGetters} from 'vuex';
+import ImageStatistics from './../components/ImageStatistics'
+import { mapActions, mapGetters } from 'vuex';
 import {
   boxFiltering,
   unsharpMasking,
@@ -37,18 +42,23 @@ import {
 export default {
   name: 'Home',
   components: {
-    ImageHistogram
+    ImageStatistics
   },
-  data() {
+  data () {
     return {
       imageUrl: null,
-      images: [],
+      images: []
     }
   },
   computed: {
-    ...mapGetters({getImagesCollection: 'activeImages/getImages', getActiveImages: 'activeImages/getActiveImages'})
+    ...mapGetters({
+      getImagesCollection: 'activeImages/getImages',
+      getActiveImages: 'activeImages/getActiveImages'
+    })
   },
-  mounted() {
+  mounted () {
+    console.log('imageModel.images')
+    console.log(this.getImagesCollection)
     window.customAPI.ipcRenderer.customOn('images:duplicate', () => {
       this.getActiveImages.forEach(activeImage => {
         this.addModel(activeImage);
@@ -61,36 +71,36 @@ export default {
 
     })
   },
-  beforeDestroy() {
+  beforeDestroy () {
     window.customAPI.ipcRenderer.customRemoveAllListeners('images:duplicate')
     window.customAPI.ipcRenderer.customRemoveAllListeners('images:save')
   },
   methods: {
     ...mapActions(
-        {
-          addModel: 'activeImages/addModel',
-          toggleImageActivity: 'activeImages/toggleImageActivity',
-          addImage: 'activeImages/addImage'
-        },
+      {
+        addModel: 'activeImages/addModel',
+        toggleImageActivity: 'activeImages/toggleImageActivity',
+        addImage: 'activeImages/addImage'
+      }
     ),
-    boxFilteringImageOption(images) {
+    boxFilteringImageOption (images) {
       this.addImages(boxFiltering(images))
     },
-    addImages(images) {
+    addImages (images) {
       images.forEach(filteredImage => {
         this.addImage(filteredImage)
       })
     },
-    unsharpMaskingImageOption(images) {
+    unsharpMaskingImageOption (images) {
       this.addImages(unsharpMasking(images));
     },
-    bilateralFilteringImageOption(images) {
+    bilateralFilteringImageOption (images) {
       this.addImages(bilateralFiltering(images));
     },
-    saltAndPepperImageOption(images) {
+    saltAndPepperImageOption (images) {
       this.addImages(saltAndPepper(images))
     }
-  },
+  }
 }
 </script>
 <style lang="scss">
@@ -107,5 +117,11 @@ export default {
   &__image-wrapper {
     overflow-x: scroll;
   }
+}
+
+.image-histogram {
+  display: flex;
+  height: 100%;
+  //overflow-x: scroll;
 }
 </style>

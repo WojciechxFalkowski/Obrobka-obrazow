@@ -22,7 +22,13 @@
                id="canvasInput" width="512" height="512"/>
         </div>
         <div class="col-4 bg-info">
-          <ImageHistogram/>
+          <div class="image-histogram">
+            <ImageStatistics
+              v-for="activeImage of imageModel.images.filter(image => image.isActive)"
+              :imageId="'image_'+imageModel.id+'_'+activeImage.id"
+              :imageModelId="imageModel.id" :activeImage="activeImage"
+              :key="activeImage.id" />
+          </div>
         </div>
       </div>
     </div>
@@ -31,7 +37,7 @@
 
 <script>
 // @ is an alias to /src
-import ImageHistogram from "./../components/ImageHistogram"
+import ImageStatistics from "./../components/ImageStatistics"
 import {mapActions, mapGetters} from 'vuex';
 import {
   boxFiltering,
@@ -43,7 +49,7 @@ import {
 export default {
   name: 'Home',
   components: {
-    ImageHistogram
+    ImageStatistics
   },
   data() {
     return {

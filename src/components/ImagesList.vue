@@ -39,8 +39,8 @@ import {
   createImageBasedOnPath,
   convertImgToDataUrl,
   convertImgToImgData,
-  mapPixelValuesToRGBArrays
-} from "../imageOperations/imageOperations";
+  mapPixelValuesToRGBArrays, isGrayScaleImage
+} from '../imageOperations/imageOperations';
 
 export default {
   name: "ImagesList.vue",
@@ -55,24 +55,11 @@ export default {
     ...mapActions({addModel: 'activeImages/addModel'}),
     addToActiveFiles(event, index) {
       const imageEl = createImageBasedOnPath(this.uploadedImages[index].path);
-      // console.log('addToActiveFiles')
-      // console.log(convertImgToImgData(imageEl))
 
-      const imgData = convertImgToImgData(imageEl);
-      const imgDataRGBAValues = imgData.data
-      let isGrayScale = true;
+      const imageData = convertImgToImgData(imageEl);
 
+      let isGrayScale = isGrayScaleImage(imageData.data);
 
-      for (let index = 0; index < imgDataRGBAValues.length; index += 4) {
-        // if (index < 20) {
-        //
-        //   console.log(`${index}. R = ${imgDataRGBAValues[index]} G = ${imgDataRGBAValues[index + 1]} B = ${imgDataRGBAValues[index + 2]} A = ${imgDataRGBAValues[index + 3]}`)
-        // }
-
-        if (imgDataRGBAValues[index] !== imgDataRGBAValues[index + 1] || imgDataRGBAValues[index] !== imgDataRGBAValues[index + 2]) {
-          isGrayScale = false;
-        }
-      }
       const {
         pixelArrayR,
         pixelArrayG,
@@ -84,7 +71,7 @@ export default {
         maxBValue,
         maxRGBValue,
         maxGrayScaleValue
-      } = mapPixelValuesToRGBArrays(imgDataRGBAValues);
+      } = mapPixelValuesToRGBArrays(imageData.data);
       this.addModel({
         ...this.uploadedImages[index],
         pixelAmounts: {
@@ -95,7 +82,7 @@ export default {
           gray: pixelArrayGrayScale,
           maxRValue, maxGValue, maxBValue, maxRGBValue, maxGrayScaleValue
         },
-        imgData: imgData,
+        imageData: imageData,
         isGrayScale: isGrayScale,
         imageDataURL: convertImgToDataUrl(imageEl)
       });
