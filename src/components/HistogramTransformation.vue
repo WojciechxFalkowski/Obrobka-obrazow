@@ -9,6 +9,7 @@
         :key="activeImage.id" />
     </div>
     <div class="col-2 align-self-center">
+      <slot></slot>
       <button @click="$emit('boot')" class="btn btn-primary">
         {{ methodName }}
       </button>

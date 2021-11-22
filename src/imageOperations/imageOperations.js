@@ -168,8 +168,18 @@ export const equalizationHistogram = (grayLut, rgbaPixels) => {
     for (let k = 0; k <= index; ++k) {
       distributor[index] += grayLut[k];
     }
+  }
+  for (let index = 0; index < distributor.length; index++) {
+    if (dMin === 0) {
+      // first not 0 value
+      dMin = distributor[index] / distributor[distributor.length - 1]
+    }
+  }
+
+  for (let index = 0; index < distributor.length; index++) {
     lut[index] = Math.round(((distributor[index] - dMin) / (pixelSum - dMin)) * 255);
   }
+
 
   console.log('lut')
   console.log(lut)
@@ -211,6 +221,69 @@ export const stretchingHistogram = (rgbaPixels, qMin, qMax) => {
     return lut[channel]
   })
 
+}
+
+export const negationOperation = (rgbaPixels) => {
+  const lut = []
+  for (let index = 0; index <= 255; index++) {
+    lut.push(255 - index)
+  }
+  return rgbaPixels.map((channel, index) => {
+    if (index % 4 === 3) return channel
+    return lut[channel]
+  })
+}
+
+export const toGrayScale = (rgbaPixels) => {
+  const grayPixels = []
+  for (let index = 0; index < rgbaPixels.length; index += 4) {
+    //mapping data to arrays (red, green, blue, rgb) of 256 slots and count their amount
+    const r = rgbaPixels[index];
+    const g = rgbaPixels[index + 1];
+    const b = rgbaPixels[index + 2];
+    const grayScalePixel = Math.round(r * 0.299 + g * 0.587 + b * 0.114)
+    grayPixels.push(...[grayScalePixel,grayScalePixel,grayScalePixel,rgbaPixels[index + 3]]);
+  }
+  return grayPixels;
+}
+
+export const thresholdExtendedOperation = (rgbaPixels, minTresholdExtendedValue, maxTresholdExtendedValue) => {
+
+  const grayScaledPixels = toGrayScale(rgbaPixels)
+
+  const thresholdrgbaPixels = []
+  for (let i = 0; i < grayScaledPixels.length; i += 4) {
+    if (grayScaledPixels[i] > maxTresholdExtendedValue || grayScaledPixels[i] < minTresholdExtendedValue) {
+      thresholdrgbaPixels.push(0);
+    } else {
+      thresholdrgbaPixels.push(grayScaledPixels[i]);
+    }
+    if (grayScaledPixels[i + 1] > maxTresholdExtendedValue || grayScaledPixels[i + 1] < minTresholdExtendedValue) {
+      thresholdrgbaPixels.push(0);
+    } else {
+      thresholdrgbaPixels.push(grayScaledPixels[i + 1]);
+    }
+    if (grayScaledPixels[i + 2] > maxTresholdExtendedValue || grayScaledPixels[i + 2] < minTresholdExtendedValue) {
+      thresholdrgbaPixels.push(0);
+    } else {
+      thresholdrgbaPixels.push(grayScaledPixels[i + 2]);
+    }
+      thresholdrgbaPixels.push(grayScaledPixels[i + 3]);
+  }
+  console.log(rgbaPixels.length)
+  console.log(thresholdrgbaPixels.length)
+  return thresholdrgbaPixels
+
+}
+
+export const thresholdOperation = (rgbaPixels, tresholdValue) => {
+  const lut = [];
+  for (let index = 0; index < 256; index++) {
+    lut.push(tresholdValue > index ? 0 : 255)
+  }
+  return rgbaPixels.map(channel => {
+    return lut[channel]
+  })
 }
 
 export const unsharpMasking = (images) => {

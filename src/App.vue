@@ -2,14 +2,14 @@
   <div id="app">
     <div id="nav">
 
-      <router-link v-for="path of paths" :to="path.to" :key="path.to">
+      <router-link class="router-link" v-for="path of paths" :to="path.to" :key="path.to">
         {{ path.name }}
       </router-link>
       <!--      <router-link to="/">Home</router-link>-->
       <!--      |-->
       <!--      <router-link to="/files">Pliki</router-link>-->
     </div>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -17,16 +17,16 @@
 
 export default {
   name: 'App',
-  data() {
+  data () {
     return {
       paths: [
         {
           to: '/',
-          name: 'Home'
+          name: 'Zdjęcia'
         },
         {
           to: '/stretch-histogram',
-          name: 'StretchHistogram'
+          name: 'Histogram'
         },
         {
           to: '/files',
@@ -45,6 +45,7 @@ export default {
 
 <style lang="scss">
 //@import 'node_modules/bootstrap/scss/bootstrap.scss';
+
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -65,5 +66,9 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.router-link {
+  text-decoration: none;
 }
 </style>

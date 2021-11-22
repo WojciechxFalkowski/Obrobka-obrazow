@@ -88,6 +88,9 @@ export default {
   mounted() {
     this.imageData = convertToImage(this.processImage()).src
   },
+  updated(){
+    this.imageData = convertToImage(this.processImage()).src
+  },
   methods: {
     processImage() {
       const isValueHistogram = this.selectedInputRatioValue === this.GRAY_VALUE;
