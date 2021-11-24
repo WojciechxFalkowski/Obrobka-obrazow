@@ -22,8 +22,6 @@ export const boxFiltering = (images) => {
 export const createImageBasedOnPath = (imagePath) => {
   const image = new Image();
   image.src = imagePath
-  console.log('image')
-  console.log(image)
   return image
 }
 /**
@@ -107,8 +105,6 @@ export const convertToImage = (imagePath) => {
   const newImage = document.createElement('img'); // create img tag
   newImage.src = imagePath;
 
-  // console.log('imagePath')
-  // console.log(imagePath)
   return newImage;
 }
 export const mapPixelValuesToRGBArrays = (rgbaPixels) => {
@@ -158,8 +154,6 @@ export const mapPixelValuesToRGBArrays = (rgbaPixels) => {
 // Gray scale images
 export const equalizationHistogram = (grayLut, rgbaPixels) => {
   const pixelSum = rgbaPixels.length / 4;
-  console.log('pixelSum')
-  console.log(pixelSum)
   const lut = (new Array(256)).fill(0);
   const distributor = (new Array(256)).fill(0);
   let dMin = 0;
@@ -180,9 +174,6 @@ export const equalizationHistogram = (grayLut, rgbaPixels) => {
     lut[index] = Math.round(((distributor[index] - dMin) / (pixelSum - dMin)) * 255);
   }
 
-
-  console.log('lut')
-  console.log(lut)
   return rgbaPixels.map(channel => {
     return lut[channel]
   })
@@ -242,7 +233,7 @@ export const toGrayScale = (rgbaPixels) => {
     const g = rgbaPixels[index + 1];
     const b = rgbaPixels[index + 2];
     const grayScalePixel = Math.round(r * 0.299 + g * 0.587 + b * 0.114)
-    grayPixels.push(...[grayScalePixel,grayScalePixel,grayScalePixel,rgbaPixels[index + 3]]);
+    grayPixels.push(...[grayScalePixel, grayScalePixel, grayScalePixel, rgbaPixels[index + 3]]);
   }
   return grayPixels;
 }
@@ -268,10 +259,8 @@ export const thresholdExtendedOperation = (rgbaPixels, minTresholdExtendedValue,
     } else {
       thresholdrgbaPixels.push(grayScaledPixels[i + 2]);
     }
-      thresholdrgbaPixels.push(grayScaledPixels[i + 3]);
+    thresholdrgbaPixels.push(grayScaledPixels[i + 3]);
   }
-  console.log(rgbaPixels.length)
-  console.log(thresholdrgbaPixels.length)
   return thresholdrgbaPixels
 
 }
@@ -317,12 +306,8 @@ export const bilateralFiltering = (images) => {
       imgEl.src = image.path;
       const src = window.cv.imread(imgEl);
       const dst = new window.cv.Mat();
-      console.log('window.cv.COLOR_RGBA2RGB')
-      console.log(window.cv.COLOR_RGBA2RGB)
       window.cv.cvtColor(src, src, window.cv.COLOR_RGBA2RGB, 0);//TODO there is a problem with rgb and rgba
       window.cv.bilateralFilter(src, dst, 4, 0, 50, window.cv.BORDER_DEFAULT);
-      console.log('dst')
-      console.log(dst)
 
       const canvasImage = convertToCanvas(dst, imageModel.images.length);
       const newImage = convertToImage(canvasImage.toDataURL())

@@ -52,13 +52,13 @@
 import { mapGetters, mapActions } from 'vuex'
 import {
   stretchingHistogram,
-  convertImgDataToDataUrl,
-  convertImgDataToImageDataObject,
-  isGrayScaleImage,
-  mapPixelValuesToRGBArrays,
-  equalizationHistogram, negationOperation, thresholdOperation, thresholdExtendedOperation
+  equalizationHistogram,
+  negationOperation,
+  thresholdOperation,
+  thresholdExtendedOperation
 } from '@/imageOperations/imageOperations'
 import HistogramTransformation from '@/components/HistogramTransformation'
+import { createImageModel } from '@/helpers/createImageModel'
 
 export default {
   name: 'StretchHistogramPage',
@@ -93,37 +93,13 @@ export default {
       const imgData = stretchingHistogram(this.getActiveImage.imageData.data,
         parseInt(this.minStretchValue), parseInt(this.maxStretchValue)
       )
-      const imageData =
-        convertImgDataToImageDataObject(
-          imgData,
-          this.getActiveImage.imageData.width,
-          this.getActiveImage.imageData.height
-        )
-      const imageDataUrl = convertImgDataToDataUrl(imageData).src
 
-      const isGrayScale = isGrayScaleImage(imageData.data)
+      const { imageData, imageDataUrl, isGrayScale, pixelAmounts } = createImageModel(
+        imgData,
+        this.getActiveImage.imageData.width,
+        this.getActiveImage.imageData.height
+      );
 
-      const {
-        pixelArrayR,
-        pixelArrayG,
-        pixelArrayB,
-        pixelArrayRGB,
-        pixelArrayGrayScale,
-        maxRValue,
-        maxGValue,
-        maxBValue,
-        maxRGBValue,
-        maxGrayScaleValue
-      } = mapPixelValuesToRGBArrays(imageData.data);
-
-      const pixelAmounts = {
-        red: pixelArrayR,
-        green: pixelArrayG,
-        blue: pixelArrayB,
-        rgb: pixelArrayRGB,
-        gray: pixelArrayGrayScale,
-        maxRValue, maxGValue, maxBValue, maxRGBValue, maxGrayScaleValue
-      }
       this.stretchedImage = {
         id: null,
         imageData: imageData,
@@ -139,51 +115,20 @@ export default {
         // timestamp:null,
       }
 
-      console.log('stretchedImage')
-      console.log(this.stretchedImage)
       this.addImage(this.stretchedImage)
     },
     equalizeHistogram () {
-      const imgData =
-        equalizationHistogram(
-          this.getActiveImage.pixelAmounts.gray,
-          this.getActiveImage.imageData.data
-        )
-      console.log('imgData')
-      console.log(imgData)
-      const imageData =
-        convertImgDataToImageDataObject(
-          imgData,
-          this.getActiveImage.imageData.width,
-          this.getActiveImage.imageData.height
-        )
-      console.log('imageData')
-      console.log(imageData)
-      const imageDataUrl = convertImgDataToDataUrl(imageData).src
+      const imgData = equalizationHistogram(
+        this.getActiveImage.pixelAmounts.gray,
+        this.getActiveImage.imageData.data
+      )
 
-      const isGrayScale = isGrayScaleImage(imageData.data)
+      const { imageData, imageDataUrl, isGrayScale, pixelAmounts } = createImageModel(
+        imgData,
+        this.getActiveImage.imageData.width,
+        this.getActiveImage.imageData.height
+      );
 
-      const {
-        pixelArrayR,
-        pixelArrayG,
-        pixelArrayB,
-        pixelArrayRGB,
-        pixelArrayGrayScale,
-        maxRValue,
-        maxGValue,
-        maxBValue,
-        maxRGBValue,
-        maxGrayScaleValue
-      } = mapPixelValuesToRGBArrays(imageData.data);
-
-      const pixelAmounts = {
-        red: pixelArrayR,
-        green: pixelArrayG,
-        blue: pixelArrayB,
-        rgb: pixelArrayRGB,
-        gray: pixelArrayGrayScale,
-        maxRValue, maxGValue, maxBValue, maxRGBValue, maxGrayScaleValue
-      }
       this.equalizedImage = {
         id: null,
         imageData: imageData,
@@ -202,39 +147,14 @@ export default {
       this.addImage(this.equalizedImage)
     },
     negation () {
-
       const imgData = negationOperation(this.getActiveImage.imageData.data)
-      const imageData =
-        convertImgDataToImageDataObject(
-          imgData,
-          this.getActiveImage.imageData.width,
-          this.getActiveImage.imageData.height
-        )
-      const imageDataUrl = convertImgDataToDataUrl(imageData).src
 
-      const isGrayScale = isGrayScaleImage(imageData.data)
+      const { imageData, imageDataUrl, isGrayScale, pixelAmounts } = createImageModel(
+        imgData,
+        this.getActiveImage.imageData.width,
+        this.getActiveImage.imageData.height
+      );
 
-      const {
-        pixelArrayR,
-        pixelArrayG,
-        pixelArrayB,
-        pixelArrayRGB,
-        pixelArrayGrayScale,
-        maxRValue,
-        maxGValue,
-        maxBValue,
-        maxRGBValue,
-        maxGrayScaleValue
-      } = mapPixelValuesToRGBArrays(imageData.data);
-
-      const pixelAmounts = {
-        red: pixelArrayR,
-        green: pixelArrayG,
-        blue: pixelArrayB,
-        rgb: pixelArrayRGB,
-        gray: pixelArrayGrayScale,
-        maxRValue, maxGValue, maxBValue, maxRGBValue, maxGrayScaleValue
-      }
       this.negationImage = {
         id: null,
         imageData: imageData,
@@ -250,45 +170,17 @@ export default {
         // timestamp:null,
       }
 
-      console.log('negationImage')
-      console.log(this.negationImage)
       this.addImage(this.negationImage)
     },
     threshold () {
-      console.log(this.getActiveImage)
-
       const imgData = thresholdOperation(this.getActiveImage.imageData.data, this.tresholdValue)
-      const imageData =
-        convertImgDataToImageDataObject(
-          imgData,
-          this.getActiveImage.imageData.width,
-          this.getActiveImage.imageData.height
-        )
-      const imageDataUrl = convertImgDataToDataUrl(imageData).src
 
-      const isGrayScale = isGrayScaleImage(imageData.data)
+      const { imageData, imageDataUrl, isGrayScale, pixelAmounts } = createImageModel(
+        imgData,
+        this.getActiveImage.imageData.width,
+        this.getActiveImage.imageData.height
+      );
 
-      const {
-        pixelArrayR,
-        pixelArrayG,
-        pixelArrayB,
-        pixelArrayRGB,
-        pixelArrayGrayScale,
-        maxRValue,
-        maxGValue,
-        maxBValue,
-        maxRGBValue,
-        maxGrayScaleValue
-      } = mapPixelValuesToRGBArrays(imageData.data);
-
-      const pixelAmounts = {
-        red: pixelArrayR,
-        green: pixelArrayG,
-        blue: pixelArrayB,
-        rgb: pixelArrayRGB,
-        gray: pixelArrayGrayScale,
-        maxRValue, maxGValue, maxBValue, maxRGBValue, maxGrayScaleValue
-      }
       this.thresholdImage = {
         id: null,
         imageData: imageData,
@@ -304,12 +196,9 @@ export default {
         // timestamp:null,
       }
 
-      console.log('thresholdImage')
-      console.log(this.thresholdImage)
       this.addImage(this.thresholdImage)
     },
     thresholdExtended () {
-      console.log(this.getActiveImage)
 
       const imgData =
         thresholdExtendedOperation(
@@ -317,37 +206,13 @@ export default {
           this.minTresholdExtendedValue,
           this.maxTresholdExtendedValue
         )
-      const imageData =
-        convertImgDataToImageDataObject(
-          imgData,
-          this.getActiveImage.imageData.width,
-          this.getActiveImage.imageData.height
-        )
-      const imageDataUrl = convertImgDataToDataUrl(imageData).src
 
-      const isGrayScale = isGrayScaleImage(imageData.data)
+      const { imageData, imageDataUrl, isGrayScale, pixelAmounts } = createImageModel(
+        imgData,
+        this.getActiveImage.imageData.width,
+        this.getActiveImage.imageData.height
+      );
 
-      const {
-        pixelArrayR,
-        pixelArrayG,
-        pixelArrayB,
-        pixelArrayRGB,
-        pixelArrayGrayScale,
-        maxRValue,
-        maxGValue,
-        maxBValue,
-        maxRGBValue,
-        maxGrayScaleValue
-      } = mapPixelValuesToRGBArrays(imageData.data);
-
-      const pixelAmounts = {
-        red: pixelArrayR,
-        green: pixelArrayG,
-        blue: pixelArrayB,
-        rgb: pixelArrayRGB,
-        gray: pixelArrayGrayScale,
-        maxRValue, maxGValue, maxBValue, maxRGBValue, maxGrayScaleValue
-      }
       this.thresholdExtendedImage = {
         id: null,
         imageData: imageData,
@@ -363,64 +228,8 @@ export default {
         // timestamp:null,
       }
 
-      console.log('thresholdExtendedImage')
-      console.log(this.thresholdExtendedImage)
       this.addImage(this.thresholdExtendedImage)
     }
-    // stretchHistogramInGivenRange () {
-    //
-    //   const imgData = stretchingHistogram(this.getActiveImage.imageData.data,
-    //     parseInt(this.minValue), parseInt(this.maxValue)
-    //   )
-    //
-    //   const imageData =
-    //     convertImgDataToImageDataObject(
-    //       imgData,
-    //       this.getActiveImage.imageData.width,
-    //       this.getActiveImage.imageData.height
-    //     )
-    //   const imageDataUrl = convertImgDataToDataUrl(imageData).src
-    //
-    //   const isGrayScale = isGrayScaleImage(imageData.data)
-    //
-    //   const {
-    //     pixelArrayR,
-    //     pixelArrayG,
-    //     pixelArrayB,
-    //     pixelArrayRGB,
-    //     pixelArrayGrayScale,
-    //     maxRValue,
-    //     maxGValue,
-    //     maxBValue,
-    //     maxRGBValue,
-    //     maxGrayScaleValue
-    //   } = mapPixelValuesToRGBArrays(imageData.data);
-    //
-    //   const pixelAmounts = {
-    //     red: pixelArrayR,
-    //     green: pixelArrayG,
-    //     blue: pixelArrayB,
-    //     rgb: pixelArrayRGB,
-    //     gray: pixelArrayGrayScale,
-    //     maxRValue, maxGValue, maxBValue, maxRGBValue, maxGrayScaleValue
-    //   }
-    //   this.stretchedImageInRange = {
-    //     id: null,
-    //     imageData: imageData,
-    //     imageDataURL: imageDataUrl,
-    //     // isActive: null,
-    //     isGrayScale: isGrayScale,
-    //     modelId: this.getActiveImage.modelId,
-    //     // name: null,
-    //     // path: null,
-    //     pixelAmounts
-    //     // size:null,
-    //     // time:null,
-    //     // timestamp:null,
-    //   }
-    //
-    //   this.addImage(this.stretchedImageInRange)
-    // }
   },
   computed: {
     ...mapGetters({
