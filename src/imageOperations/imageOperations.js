@@ -275,6 +275,53 @@ export const thresholdOperation = (rgbaPixels, tresholdValue) => {
   })
 }
 
+export const posterizationOperation = (rgbaPixels, colorsNumber) => {
+  const lut = [];
+  if (colorsNumber === 1) {
+    return rgbaPixels.map((channel, index) => {
+      if (index % 4 === 3) return channel
+      return 0
+    })
+  }
+  const step = 255 / (colorsNumber - 1)
+
+  for (let index = 0; index < 256; index++) {
+    const stepIndex = Math.round(index / step)
+    lut.push(Math.round(step * stepIndex))
+  }
+
+  return rgbaPixels.map(channel => {
+    return lut[channel]
+  })
+}
+
+export const stretchInRangeOperation = (rgbaPixels, p1, p2, q3, q4) => {
+  const q5 = 0; // background
+  const newPixels = []
+
+  for (let index = 0; index < rgbaPixels.length; index += 4) {
+    if (rgbaPixels[index] >= p1 && rgbaPixels[index] <= p2) {
+      newPixels.push((rgbaPixels[index] - p1) * ((q4 - q3) / (p2 - p1)) + q3); //red
+    } else {
+      newPixels.push(q5);
+    }
+
+    if (rgbaPixels[index + 1] >= p1 && rgbaPixels[index + 1] <= p2) {
+      newPixels.push((rgbaPixels[index + 1] - p1) * ((q4 - q3) / (p2 - p1)) + q3); //green
+    } else {
+      newPixels.push(q5);
+    }
+
+    if (rgbaPixels[index + 2] >= p1 && rgbaPixels[index] <= p2) {
+      newPixels.push((rgbaPixels[index + 2] - p1) * ((q4 - q3) / (p2 - p1)) + q3); //blue
+    } else {
+      newPixels.push(q5);
+    }
+    newPixels.push(rgbaPixels[index + 3]);
+  }
+  return newPixels
+}
+
 export const unsharpMasking = (images) => {
   const filteredImages = []
   images.forEach(imageModel => {
