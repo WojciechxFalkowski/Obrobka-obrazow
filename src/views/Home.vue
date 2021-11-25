@@ -38,6 +38,7 @@ import {
   bilateralFiltering,
   saltAndPepper
 } from '../imageOperations/imageOperations'
+import { MENU_IMAGE_SAVE, MENU_IMAGE_DUPLICATE, MENU_ROUTE_HISTOGRAM } from '@/contracts/menu'
 
 export default {
   name: 'Home',
@@ -59,21 +60,24 @@ export default {
   mounted () {
     console.log('imageModel.images')
     console.log(this.getImagesCollection)
-    window.customAPI.ipcRenderer.customOn('images:duplicate', () => {
+    window.customAPI.ipcRenderer.customOn(MENU_IMAGE_DUPLICATE, () => {
       this.getActiveImages.forEach(activeImage => {
         this.addModel(activeImage);
       })
     })
-    window.customAPI.ipcRenderer.customOn('images:save', () => {
+    window.customAPI.ipcRenderer.customOn(MENU_IMAGE_SAVE, () => {
       console.log('save image in rendered process')
       console.log(this.getActiveImages);
       window.customAPI.ipcRenderer.send('app:save-image', this.getActiveImages);
-
+    })
+    window.customAPI.ipcRenderer.customOn(MENU_ROUTE_HISTOGRAM, (routeName) => {
+      console.log(`Go to route: ${routeName}`)
+      this.$router.push(routeName)
     })
   },
   beforeDestroy () {
     window.customAPI.ipcRenderer.customRemoveAllListeners('images:duplicate')
-    window.customAPI.ipcRenderer.customRemoveAllListeners('images:save')
+    window.customAPI.ipcRenderer.customRemoveAllListeners(MENU_IMAGE_SAVE)
   },
   methods: {
     ...mapActions(

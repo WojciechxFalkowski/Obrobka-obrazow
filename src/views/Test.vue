@@ -6,6 +6,11 @@
       <!--      <button class="btn btn-primary" @click="bilateralFilteringImageOption(getImagesCollection)">Bilateral filtering</button>-->
       <button class="btn btn-primary" @click="saltAndPepperImageOption(getImagesCollection)">SaltAndPepper</button>
       <button class="btn btn-primary" @click="testClick">SaltAndPepper</button>
+      <button class="btn btn-primary" @click="testClickA">Test a</button>
+      <button class="btn btn-primary" @click="testClickB">Test b</button>
+      <button class="btn btn-primary" @click="testClickC">Test c</button>
+      <button class="btn btn-primary" @click="testClickD">Test d</button>
+      <button class="btn btn-primary" @click="testClickE">TestRoute histogram</button>
 
     </div>
     <!--    src="C:\Users\48698\OneDrive\Documents\skill\projects\apo_wojciech_falkowski\dist_electron\uploads\blog_img_1-desktop.jpg"-->
@@ -76,15 +81,34 @@ export default {
         },
     ),
     testClick(){
-      console.log('testClick')
-      window.customAPI.ipcRenderer.send('asynchronous-message', {a:'abc',id:21,text:'createNewWindow'});
-      console.log(window.customAPI)
-      window.customAPI.ipcRenderer.invoke('asynchronous-reply', (event, arg) => {
-        console.log(arg) // prints "pong"
-      })
+      // console.log('testClick')
+      // window.customAPI.ipcRenderer.send('asynchronous-message', {a:'abc',id:21,text:'createNewWindow'});
+      // console.log(window.customAPI)
+      // window.customAPI.ipcRenderer.invoke('asynchronous-reply', (event, arg) => {
+      //   console.log(arg) // prints "pong"
+      // })
+
+      window.customAPI.ipcRenderer.send('logged-in',2)
       // window.customAPI.ipcRenderer.send('app:on-file-delete', {filepath}).then(() => {
       //   this.getUploadedFiles()
       // });
+    },
+    testClickA(){
+      window.customAPI.ipcRenderer.send('logged-in',null)
+
+    },
+    testClickB(){
+      window.customAPI.ipcRenderer.send('logged-in',2)
+
+    },
+    testClickC(){
+      window.customAPI.ipcRenderer.send('logged-in',5)
+    },
+    testClickD(){
+      window.customAPI.ipcRenderer.send('logged-in',1)
+    },
+    testClickE(){
+      this.$router.push('/stretch-histogram')
     },
     getImageData(img) {
       const canvas = document.createElement('canvas');
