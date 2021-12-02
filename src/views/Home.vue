@@ -8,7 +8,7 @@
         <div class="col-6 d-flex home__image-wrapper pb-2" ref="imageWrapperRef">
           <img :key="image.id" v-for="image of imageModel.images"
                :class="image.isActive?'active':''"
-               @click="toggleImageActivity({modelId:imageModel.id,imageId:image.id})"
+               @click="toggleImage(imageModel.id,image.id)"
                :src="image.imageDataURL?image.imageDataURL:image.path"
                :data-title="image.id"
                class="home__default-image p-2" alt="img"
@@ -38,7 +38,7 @@ import {
   bilateralFiltering,
   saltAndPepper
 } from '../imageOperations/imageOperations'
-import { MENU_IMAGE_SAVE, MENU_IMAGE_DUPLICATE, MENU_ROUTE_HISTOGRAM } from '@/contracts/menu'
+import { MENU_IMAGE_SAVE, MENU_IMAGE_DUPLICATE } from '@/contracts/menu'
 
 export default {
   name: 'Home',
@@ -58,21 +58,17 @@ export default {
     })
   },
   mounted () {
-    console.log('imageModel.images')
-    console.log(this.getImagesCollection)
+    // console.log('imageModel.images')
+    // console.log(this.getImagesCollection)
     window.customAPI.ipcRenderer.customOn(MENU_IMAGE_DUPLICATE, () => {
       this.getActiveImages.forEach(activeImage => {
         this.addModel(activeImage);
       })
     })
     window.customAPI.ipcRenderer.customOn(MENU_IMAGE_SAVE, () => {
-      console.log('save image in rendered process')
-      console.log(this.getActiveImages);
+      // console.log('save image in rendered process')
+      // console.log(this.getActiveImages);
       window.customAPI.ipcRenderer.send('app:save-image', this.getActiveImages);
-    })
-    window.customAPI.ipcRenderer.customOn(MENU_ROUTE_HISTOGRAM, (routeName) => {
-      console.log(`Go to route: ${routeName}`)
-      this.$router.push(routeName)
     })
   },
   beforeDestroy () {
@@ -87,6 +83,12 @@ export default {
         addImage: 'activeImages/addImage'
       }
     ),
+    toggleImage(modelId,imageId){
+      this.toggleImageActivity({modelId,imageId})
+      // console.log('getActiveImages')
+      // console.log(this.getActiveImages.length)
+      window.customAPI.ipcRenderer.send('logged-in',this.getActiveImages.length)
+    },
     boxFilteringImageOption (images) {
       this.addImages(boxFiltering(images))
     },

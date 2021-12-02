@@ -41,8 +41,8 @@
       </div>
     </div>
 
+    <h2 class="">LUT</h2>
     <div class="image-chart__table">
-      <h2 class="">LUT</h2>
       <table>
         <tr>
           <th>Index</th>

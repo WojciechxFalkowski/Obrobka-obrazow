@@ -1,6 +1,6 @@
 const { ipcMain } = require('electron');
 
-import { MENU_IMAGE_SAVE, MENU_IMAGE_DUPLICATE, MENU_ROUTE_HISTOGRAM } from '@/contracts/menu'
+import { MENU_IMAGE_SAVE, MENU_IMAGE_DUPLICATE } from '@/contracts/menu'
 
 const navbarMenu = (win) => {
   return [
@@ -22,9 +22,28 @@ const navbarMenu = (win) => {
       label: 'Obraz',
       submenu: [
         {
+          label: 'Zdjęcia',
+          enabled: true,
+          click: function () {
+            win.webContents.send('change-route','Home')
+          },
+          meta: {
+            requiredImages: 1
+          }
+        },
+        {
+          label: 'Dodaj zdjęcie',
+          enabled: true,
+          click: function () {
+            win.webContents.send('change-route','FilesPage')
+          },
+          meta: {
+            requiredImages: 1
+          }
+        },
+        {
           label: 'Duplikuj aktywne',
           click: function () {
-            console.log(MENU_IMAGE_DUPLICATE);
             win.webContents.send(MENU_IMAGE_DUPLICATE)
           }
         },
@@ -34,43 +53,59 @@ const navbarMenu = (win) => {
             win.webContents.send(MENU_IMAGE_SAVE)
           }
         }
-        // {
-        //     label: 'sabmenu3',
-        //     click: function () {
-        //         console.log('clicked submenu 3')
-        //     }
-        // }
       ]
     },
     {
       label: 'Operacje',
       submenu: [
         {
-          label: 'submenu 4',
+          label: 'Rozciągnij / wyrównaj histogram',
           enabled: false,
           click: function () {
-            win.webContents.send('change-route',MENU_ROUTE_HISTOGRAM)
+            win.webContents.send('change-route','StretchHistogramPage')
           },
           meta: {
-            requiredImages: 2
+            requiredImages: 1
           }
         },
         {
-          label: 'sabmenu 5',
+          label: 'Negacja',
+          enabled: false,
           click: function () {
-            console.log('clicked submenu 5')
+            win.webContents.send('change-route','NegationPage')
           },
           meta: {
-            requiredImages: null
+            requiredImages: 1
           }
         },
         {
-          label: 'sabmenu 6',
+          label: 'Progowanie',
+          enabled: false,
           click: function () {
-            console.log('clicked submenu 6')
+            win.webContents.send('change-route','TresholdPage')
           },
           meta: {
-            requiredImages: 5
+            requiredImages: 1
+          }
+        },
+        {
+          label: 'Posteryzacja',
+          enabled: false,
+          click: function () {
+            win.webContents.send('change-route','PosterizationPage')
+          },
+          meta: {
+            requiredImages: 1
+          }
+        },
+        {
+          label: 'Wygładzania liniowego (blur)',
+          enabled: false,
+          click: function () {
+            win.webContents.send('change-route','BlurPage')
+          },
+          meta: {
+            requiredImages: 1
           }
         }
       ]

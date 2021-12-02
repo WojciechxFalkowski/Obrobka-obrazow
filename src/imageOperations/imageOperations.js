@@ -11,7 +11,7 @@ export const boxFiltering = (images) => {
       const anchor = new window.cv.Point(-1, -1);
       window.cv.boxFilter(src, dst, src.depth(), ksize, anchor, true, window.cv.BORDER_DEFAULT);
 
-      const canvasImage = convertToCanvas(dst, imageModel.images.length);
+      const canvasImage = convertToCanvas(dst);
       const newImage = convertToImage(canvasImage.toDataURL())
       filteredImages.push({ modelId: imageModel.id, image: { imageDataURL: newImage.src } })
     })
@@ -83,20 +83,19 @@ export const convertImgDataToDataUrl = (imageData) => {
   image.src = canvas.toDataURL();
   return image;
 }
-export const convertToCanvas = (dst, imageId) => {
+export const convertToCanvas = (rgbaPixels, width, height) => {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
-  canvas.id = imageId;
-  canvas.width = dst.cols;
-  canvas.height = dst.rows;
+  canvas.width = width;
+  canvas.height = height;
   /**
    * https://stackoverflow.com/questions/38556730/imagedata-byte-length-is-not-a-multiple-of-4-width
    * 4 * width * height
    * @type {Uint8ClampedArray}
    */
     // const uint = new Uint8ClampedArray(dst.data, dst.cols, dst.rows);
-  const uint = new Uint8ClampedArray(dst.data, dst.cols, dst.rows);
-  const imgData = new ImageData(uint, dst.cols);
+  const uint = new Uint8ClampedArray(rgbaPixels, width, height);
+  const imgData = new ImageData(uint, width);
 
   ctx.putImageData(imgData, 0, 0)
   return canvas;
@@ -296,29 +295,61 @@ export const posterizationOperation = (rgbaPixels, colorsNumber) => {
 }
 
 export const stretchInRangeOperation = (rgbaPixels, p1, p2, q3, q4) => {
-  const q5 = 0; // background
   const newPixels = []
+  // let min = 255;
+  // let max = 0;
+  // let lowerThenMin = 0;
+  // let higherThenMax = 0;
 
   for (let index = 0; index < rgbaPixels.length; index += 4) {
     if (rgbaPixels[index] >= p1 && rgbaPixels[index] <= p2) {
       newPixels.push((rgbaPixels[index] - p1) * ((q4 - q3) / (p2 - p1)) + q3); //red
-    } else {
-      newPixels.push(q5);
+    } else if (rgbaPixels[index] < p1) {
+      newPixels.push(q3);
+      // lowerThenMin += 1;
+    } else if (rgbaPixels[index] > p2) {
+      newPixels.push(q4);
+      // higherThenMax += 1;
     }
 
     if (rgbaPixels[index + 1] >= p1 && rgbaPixels[index + 1] <= p2) {
       newPixels.push((rgbaPixels[index + 1] - p1) * ((q4 - q3) / (p2 - p1)) + q3); //green
-    } else {
-      newPixels.push(q5);
+    } else if (rgbaPixels[index + 1] < p1) {
+      newPixels.push(q3);
+      // lowerThenMin += 1;
+    } else if (rgbaPixels[index + 1] > p2) {
+      newPixels.push(q4);
+      // higherThenMax += 1;
     }
 
     if (rgbaPixels[index + 2] >= p1 && rgbaPixels[index] <= p2) {
       newPixels.push((rgbaPixels[index + 2] - p1) * ((q4 - q3) / (p2 - p1)) + q3); //blue
-    } else {
-      newPixels.push(q5);
+    } else if (rgbaPixels[index + 2] < p1) {
+      newPixels.push(q3);
+      // lowerThenMin += 1;
+    } else if (rgbaPixels[index + 2] > p2) {
+      newPixels.push(q4);
+      // higherThenMax += 1;
     }
     newPixels.push(rgbaPixels[index + 3]);
+
+    // const rgbMin = Math.min(rgbaPixels[index],rgbaPixels[index+1],rgbaPixels[index+2])
+    // const rgbMax = Math.min(rgbaPixels[index],rgbaPixels[index+1],rgbaPixels[index+2])
+    // if(rgbMin<min)
+    // {
+    //   min = rgbMin
+    // }
+    // if(rgbMax>max)
+    // {
+    //   max = rgbMax
+    // }
+
   }
+
+  // console.log('min', min)
+  // console.log('max', max)
+  // console.log('lower', lowerThenMin)
+  // console.log('higher', higherThenMax)
   return newPixels
 }
 
@@ -336,7 +367,7 @@ export const unsharpMasking = (images) => {
       const kernel = window.cv.matFromArray(kernelSize, kernelSize, window.cv.CV_32FC1, arr);
       window.cv.filter2D(src, dst, window.cv.CV_8U, kernel, new window.cv.Point(-1, -1), 0, window.cv.BORDER_DEFAULT)
 
-      const canvasImage = convertToCanvas(dst, imageModel.images.length);
+      const canvasImage = convertToCanvas(dst);
       const newImage = convertToImage(canvasImage.toDataURL())
       filteredImages.push({ modelId: imageModel.id, image: { imageDataURL: newImage.src } })
     })
@@ -356,7 +387,7 @@ export const bilateralFiltering = (images) => {
       window.cv.cvtColor(src, src, window.cv.COLOR_RGBA2RGB, 0);//TODO there is a problem with rgb and rgba
       window.cv.bilateralFilter(src, dst, 4, 0, 50, window.cv.BORDER_DEFAULT);
 
-      const canvasImage = convertToCanvas(dst, imageModel.images.length);
+      const canvasImage = convertToCanvas(dst);
       const newImage = convertToImage(canvasImage.toDataURL())
       filteredImages.push({ modelId: imageModel.id, image: { imageDataURL: newImage.src } })
     })
@@ -395,7 +426,7 @@ export const saltAndPepper = (images) => {
       } // for()
 
 
-      const canvasImage = convertToCanvas(src, imageModel.images.length);
+      const canvasImage = convertToCanvas(src);
       const newImage = convertToImage(canvasImage.toDataURL())
       filteredImages.push({ modelId: imageModel.id, image: { imageDataURL: newImage.src } })
     })

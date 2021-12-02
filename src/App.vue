@@ -1,19 +1,17 @@
 <template>
   <div id="app">
-    <div id="nav">
+<!--    <div id="nav">-->
 
-      <router-link class="router-link" v-for="path of paths" :to="path.to" :key="path.to">
-        {{ path.name }}
-      </router-link>
-      <!--      <router-link to="/">Home</router-link>-->
-      <!--      |-->
-      <!--      <router-link to="/files">Pliki</router-link>-->
-    </div>
+<!--      <router-link class="router-link" v-for="path of paths" :to="path.to" :key="path.to">-->
+<!--        {{ path.name }}-->
+<!--      </router-link>-->
+<!--    </div>-->
     <router-view />
   </div>
 </template>
 
 <script>
+
 
 export default {
   name: 'App',
@@ -38,7 +36,24 @@ export default {
         }
       ]
     }
-  }
+  },
+  mounted(){
+    window.customAPI.ipcRenderer.customOn('change-route', (routeName) => {
+      // console.log('routeName')
+      // console.log(routeName)
+      // console.log()
+      // console.log(`Go to route: ${routeName}`)
+      if(this.$route.name!==routeName)
+      {
+        const routePath = this.$router.resolve({name:routeName}).resolved.path
+        this.$router.push(routePath)
+      }
+      // console.log(this.$router)
+    })
+  },
+  beforeDestroy () {
+    window.customAPI.ipcRenderer.customRemoveAllListeners('change-route')
+  },
 }
 
 </script>

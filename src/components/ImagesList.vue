@@ -86,8 +86,8 @@ export default {
         isGrayScale: isGrayScale,
         imageDataURL: convertImgToDataUrl(imageEl)
       });
-      console.log('IMAGES LIST COMPONENT')
-      console.log(this.getImagesCollection)
+      // console.log('IMAGES LIST COMPONENT')
+      // console.log(this.getImagesCollection)
       event.target.classList.add('disabled')
     }
   }
