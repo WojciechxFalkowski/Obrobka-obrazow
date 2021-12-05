@@ -118,12 +118,6 @@ export default {
         parseInt(this.kValue)
       ).getContext('2d').getImageData(0, 0, width, height)
 
-      // const imgData =
-      //   posterizationOperation(
-      //     this.getActiveImage.imageData.data,
-      //     parseInt(this.posterizationValue)
-      //   )
-
       const { imageData, imageDataUrl, isGrayScale, pixelAmounts } = createImageModel(
         newImageData.data,
         newImageData.width,

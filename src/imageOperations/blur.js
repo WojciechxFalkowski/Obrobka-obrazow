@@ -27,6 +27,7 @@ export const blur = (type, sourceCanvas, kernelSize, borderType, borderColor, kV
       blue: 0
     }
   }
+
   if (typeof (kValue) === 'undefined' || isNaN(kValue)) {
     kValue = 1
   }

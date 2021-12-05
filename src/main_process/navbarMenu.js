@@ -107,6 +107,26 @@ const navbarMenu = (win) => {
           meta: {
             requiredImages: 1
           }
+        },
+        {
+          label: 'Wyostrzanie liniowego',
+          enabled: false,
+          click: function () {
+            win.webContents.send('change-route','Filters2DPage')
+          },
+          meta: {
+            requiredImages: 1
+          }
+        },
+        {
+          label: 'Dwuargumentowe',
+          enabled: false,
+          click: function () {
+            win.webContents.send('change-route','MaskPage')
+          },
+          meta: {
+            requiredImages: 2
+          }
         }
       ]
     }

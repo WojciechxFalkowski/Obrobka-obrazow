@@ -7,6 +7,8 @@ import NegationPage from '@/views/NegationPage'
 import TresholdPage from '@/views/TresholdPage'
 import PosterizationPage from '@/views/PosterizationPage'
 import BlurPage from '@/views/BlurPage'
+import Filters2DPage from '@/views/Filters2DPage'
+import MaskPage from '@/views/MaskPage'
 
 Vue.use(VueRouter)
 
@@ -40,6 +42,16 @@ const routes = [
     path: '/blur',
     name: 'BlurPage',
     component: BlurPage
+  },
+  {
+    path: '/filters2D',
+    name: 'Filters2DPage',
+    component: Filters2DPage
+  },
+  {
+    path: '/Mask',
+    name: 'MaskPage',
+    component: MaskPage
   },
   {
     path: '/test',

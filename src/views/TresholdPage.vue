@@ -25,6 +25,27 @@
                v-model="maxTresholdExtendedValue">
       </div>
     </HistogramTransformation>
+
+    <HistogramTransformation :activeImage="getActiveImage" :stretchedImage="otsuImage"
+                             @boot="otsu" :methodName="'Otsu'">
+      <div class="d-flex flex-column">
+        <div class="input-group my-3">
+          <label class="input-group-text" for="first-image">
+            First image:
+          </label>
+
+          <select id="first-image" v-model="thresholdType" class="form-select">
+            <option value="otsu">Otsu</option>
+            <option value="adaptive-mean">Adaptive (mean)</option>
+            <option value="adaptive-gaussian">Adaptive (gaussian)</option>
+
+          </select>
+        </div>
+        <!--        <label for="threshold_value">{{ tresholdValue }}</label>-->
+        <!--        <input id="threshold_value" type="range" min="0" :max="255" step="1"-->
+        <!--               v-model="tresholdValue">-->
+      </div>
+    </HistogramTransformation>
   </div>
 </template>
 
@@ -33,7 +54,7 @@ import { mapGetters, mapActions } from 'vuex'
 import HistogramTransformation from '@/components/HistogramTransformation'
 import {
   thresholdOperation,
-  thresholdExtendedOperation
+  thresholdExtendedOperation, convertToCanvas, ostuThreshold
 } from '@/imageOperations/imageOperations'
 import { createImageModel } from '@/helpers/createImageModel'
 
@@ -46,6 +67,9 @@ export default {
       minTresholdExtendedValue: 0,
       maxTresholdExtendedValue: 255,
       tresholdValue: 128,
+      otsuImage: {},
+      thresholdType: 'otsu'
+
     }
   },
   components: {
@@ -119,6 +143,37 @@ export default {
 
       // this.addImage(this.thresholdExtendedImage)
     },
+    otsu () {
+      const { data, width, height } = this.getActiveImage.imageData
+
+      const newCanvas = ostuThreshold(convertToCanvas(data, width, height), this.thresholdType)
+      const newImageData = newCanvas.getContext('2d')
+        .getImageData(0, 0, width, height)
+      this.createImage(newImageData)
+
+    },
+    createImage (newImageData) {
+      const { imageData, imageDataUrl, isGrayScale, pixelAmounts } = createImageModel(
+        newImageData.data,
+        newImageData.width,
+        newImageData.height
+      );
+
+      this.otsuImage = {
+        id: null,
+        imageData: imageData,
+        imageDataURL: imageDataUrl,
+        // isActive: null,
+        isGrayScale: isGrayScale,
+        modelId: this.getActiveImage.modelId,
+        // name: null,
+        // path: null,
+        pixelAmounts
+        // size:null,
+        // time:null,
+        // timestamp:null,
+      }
+    }
   },
   computed: {
     ...mapGetters({

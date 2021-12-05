@@ -69,7 +69,7 @@ export const isGrayScaleImage = (imgData) => {
 }
 export const convertImgDataToImageDataObject = (imgData, width, height) => {
   const uint = new Uint8ClampedArray(imgData, height, width);
-  return new ImageData(uint, height)
+  return new ImageData(uint, width)
 }
 export const convertImgDataToDataUrl = (imageData) => {
   const canvas = document.createElement('canvas');
@@ -432,4 +432,22 @@ export const saltAndPepper = (images) => {
     })
   })
   return filteredImages;
+}
+export const ostuThreshold = (canvas, type) => {
+  const dst = new window.cv.Mat();
+  const src = window.cv.imread(canvas);
+
+  window.cv.cvtColor(src, src, window.cv.COLOR_BGR2GRAY);
+
+  if (type === 'otsu') {
+    window.cv.threshold(src, dst, 0, 255, window.cv.THRESH_BINARY + window.cv.THRESH_OTSU)
+  } else {
+    let mode = type === 'adaptive-mean' ? window.cv.ADAPTIVE_THRESH_MEAN_C : window.cv.ADAPTIVE_THRESH_GAUSSIAN_C;
+    window.cv.adaptiveThreshold(src, dst, 255, mode, window.cv.THRESH_BINARY, 3, 2)
+  }
+  window.cv.imshow(canvas, dst);
+  src.delete()
+  dst.delete()
+  return canvas
+
 }
