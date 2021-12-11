@@ -127,6 +127,16 @@ const navbarMenu = (win) => {
           meta: {
             requiredImages: 2
           }
+        },
+        {
+          label: 'Segmentacja',
+          enabled: false,
+          click: function () {
+            win.webContents.send('change-route','SegmentationPage')
+          },
+          meta: {
+            requiredImages: 1
+          }
         }
       ]
     }

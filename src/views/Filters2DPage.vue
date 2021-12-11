@@ -148,22 +148,22 @@ export default {
         filterArr = [0, -1, 0, -1, 4, -1, 0, -1, 0];
       } else if (this.maskType === 'mask-2') {
         filterArr = [-1, -1, -1, -1, 8, -1, -1, -1, -1];
-      } else if (this.maskType === 'prewitt-n') {
-        filterArr = [1, 1, 1, 0, 0, 0, -1, -1, -1];
-      } else if (this.maskType === 'prewitt-ne') {
-        filterArr = [0, 1, 1, -1, 0, 1, -1, -1, 0];
-      } else if (this.maskType === 'prewitt-e') {
-        filterArr = [-1, 0, 1, -1, 0, 1, -1, 0, 1];
-      } else if (this.maskType === 'prewitt-se') {
-        filterArr = [-1, -1, 0, -1, 0, 1, 0, 1, 1];
-      } else if (this.maskType === 'prewitt-s') {
-        filterArr = [-1, -1, -1, 0, 0, 0, 1, 1, 1];
-      } else if (this.maskType === 'prewitt-sw') {
-        filterArr = [0, -1, -1, 1, 0, -1, 1, 1, 0];
-      } else if (this.maskType === 'prewitt-w') {
-        filterArr = [1, 0, -1, 1, 0, -1, 1, 0, -1];
-      } else if (this.maskType === 'prewitt-nw') {
-        filterArr = [1, 1, 0, 1, 0, -1, 0, -1, -1];
+      } else if (this.maskType === 'sobel-n') {
+        filterArr = [1, 2, 1, 0, 0, 0, -1, -2, -1];
+      } else if (this.maskType === 'sobel-ne') {
+        filterArr = [0, 1, 2, -1, 0, 1, -2, -1, 0];
+      } else if (this.maskType === 'sobel-e') {
+        filterArr = [-1, 0, 1, -2, 0, 2, -1, 0, 1];
+      } else if (this.maskType === 'sobel-se') {
+        filterArr = [-2, -1, 0, -1, 0, 1, 0, 1, 2];
+      } else if (this.maskType === 'sobel-s') {
+        filterArr = [-1, -2, -1, 0, 0, 0, 1, 2, 1];
+      } else if (this.maskType === 'sobel-sw') {
+        filterArr = [0, -2, -1, 1, 0, -1, 1, 2, 0];
+      } else if (this.maskType === 'sobel-w') {
+        filterArr = [1, 0, -1, 2, 0, -2, 1, 0, -1];
+      } else if (this.maskType === 'sobel-nw') {
+        filterArr = [2, 1, 0, 1, 0, -1, 0, -1, -2];
       } else {
         // mask-3
         filterArr = [1, -2, 1, -2, 4, -2, 1, -2, 1];

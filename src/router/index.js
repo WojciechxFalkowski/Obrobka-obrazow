@@ -9,6 +9,7 @@ import PosterizationPage from '@/views/PosterizationPage'
 import BlurPage from '@/views/BlurPage'
 import Filters2DPage from '@/views/Filters2DPage'
 import MaskPage from '@/views/MaskPage'
+import SegmentationPage from '@/views/SegmentationPage'
 
 Vue.use(VueRouter)
 
@@ -52,6 +53,11 @@ const routes = [
     path: '/Mask',
     name: 'MaskPage',
     component: MaskPage
+  },
+  {
+    path: '/Segmentation',
+    name: 'SegmentationPage',
+    component: SegmentationPage
   },
   {
     path: '/test',
