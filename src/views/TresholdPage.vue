@@ -7,7 +7,6 @@
         <input id="threshold_value" type="range" min="0" :max="255" step="1"
                v-model="tresholdValue">
       </div>
-      <button @click="saveThresholdImage">Zapisz obraz</button>
     </HistogramTransformation>
 
     <HistogramTransformation :activeImage="getActiveImage" :stretchedImage="thresholdExtendedImage"
@@ -25,7 +24,6 @@
         <input id="max_threshold_extended_value" type="range" min="0" max="255" step="1"
                v-model="maxTresholdExtendedValue">
       </div>
-      <button @click="saveThresholdExtendedImage">Zapisz obraz</button>
     </HistogramTransformation>
 
     <HistogramTransformation :activeImage="getActiveImage" :stretchedImage="otsuImage"
@@ -47,13 +45,12 @@
         <!--        <input id="threshold_value" type="range" min="0" :max="255" step="1"-->
         <!--               v-model="tresholdValue">-->
       </div>
-      <button @click="saveOtsuImage">Zapisz obraz</button>
     </HistogramTransformation>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import HistogramTransformation from '@/components/HistogramTransformation'
 import {
   thresholdOperation,
@@ -84,16 +81,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ addImage: 'activeImages/addImage' }),
-    saveThresholdImage () {
-      this.addImage(this.thresholdImage)
-    },
-    saveThresholdExtendedImage () {
-      this.addImage(this.thresholdExtendedImage)
-    },
-    saveOtsuImage () {
-      this.addImage(this.otsuImage)
-    },
     threshold () {
       const imgData = thresholdOperation(
         this.getActiveImage.imageData.data,
@@ -121,7 +108,6 @@ export default {
         // timestamp:null,
       }
 
-      // this.addImage(this.thresholdImage)
     },
     thresholdExtended () {
 

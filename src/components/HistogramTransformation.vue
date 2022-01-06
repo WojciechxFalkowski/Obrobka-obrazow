@@ -21,13 +21,16 @@
     </div>
     <div class="col-2 align-self-center">
       <slot></slot>
-      <button @click="$emit('boot')" class="btn btn-primary">
+      <button @click="$emit('boot')" class="btn btn-primary" :disabled="!isReadyToBoot">
         {{ methodName }}
       </button>
 
-      <button @click="saveImage" class="btn mt-5" :class="isModifiedImage?'btn-dark':'btn-outline-dark'">
-        Zapisz obraz
-      </button>
+      <div>
+        <button @click="saveImage" class="btn mt-5" :disabled="!isModifiedImage"
+                :class="isModifiedImage?'btn-dark':'btn-outline-dark'">
+          Zapisz obraz
+        </button>
+      </div>
     </div>
     <div class="col-5" v-if="isModifiedImage">
       <img :src="stretchedImage.imageDataURL" alt="Image"
@@ -46,15 +49,35 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'HistogramTransformation',
-  props: ['activeImage', 'activeImages', 'stretchedImage', 'methodName'],
+  props: {
+    activeImage: {
+      type: Object,
+      required: false
+    },
+    activeImages: {
+      type: Array, required: false
+    },
+    stretchedImage: {
+      type: Object, required: false
+    },
+    methodName: {
+      type: String,
+      required: true
+    },
+    isReadyToBoot: {
+      type: Boolean,
+      required: false,
+      default: true
+    }
+  },
   components: {
     ImageStatistics
   },
-  methods:{
+  methods: {
     ...mapActions({ addImage: 'activeImages/addImage' }),
     saveImage () {
       this.addImage(this.stretchedImage)
-    },
+    }
   },
   computed: {
     isSingleActiveImage () {
@@ -67,8 +90,8 @@ export default {
       // console.log(this.activeImages&&this.activeImages.length >= 2)
       return this.activeImages && this.activeImages.length >= 2
     },
-    isModifiedImage(){
-      return Object.keys(this.stretchedImage).length>0
+    isModifiedImage () {
+      return Object.keys(this.stretchedImage).length > 0
     }
   }
 }

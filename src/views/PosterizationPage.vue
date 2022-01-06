@@ -7,14 +7,13 @@
         <input id="posterization_value" type="number" class="form-control text-center mb-2" :min="1"
                :max="255" :step="1"
                v-model="posterizationValue">
-        <button @click="saveImage">Zapisz obraz</button>
       </div>
     </HistogramTransformation>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import HistogramTransformation from '@/components/HistogramTransformation'
 import {  posterizationOperation } from '@/imageOperations/imageOperations'
 import { createImageModel } from '@/helpers/createImageModel'
@@ -31,10 +30,6 @@ export default {
     HistogramTransformation
   },
   methods: {
-    ...mapActions({ addImage: 'activeImages/addImage' }),
-    saveImage () {
-      this.addImage(this.posterizationImage)
-    },
     posterization () {
       const imgData =
         posterizationOperation(
@@ -63,7 +58,6 @@ export default {
         // timestamp:null,
       }
 
-      // this.addImage(this.posterizationImage)
     },
   },
   computed: {

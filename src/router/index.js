@@ -39,6 +39,7 @@ const routes = [
     name: 'NegationPage',
     component: NegationPage
   },
+  // progowanie
   {
     path: '/treshold',
     name: 'TresholdPage',
@@ -49,16 +50,19 @@ const routes = [
     name: 'PosterizationPage',
     component: PosterizationPage
   },
+  // wygładzanie liniowe (blur)
   {
     path: '/blur',
     name: 'BlurPage',
     component: BlurPage
   },
+  // wyostrzanie liniowe
   {
     path: '/filters2D',
     name: 'Filters2DPage',
     component: Filters2DPage
   },
+  // dwuargumentowe
   {
     path: '/Mask',
     name: 'MaskPage',

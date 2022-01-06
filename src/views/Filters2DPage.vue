@@ -58,13 +58,12 @@
 
       </div>
 
-      <button @click="saveImage">Zapisz obraz</button>
     </HistogramTransformation>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import HistogramTransformation from '@/components/HistogramTransformation'
 import { createImageModel } from '@/helpers/createImageModel'
 import { convertToCanvas } from '@/imageOperations/imageOperations'
@@ -87,10 +86,6 @@ export default {
     HistogramTransformation
   },
   methods: {
-    ...mapActions({ addImage: 'activeImages/addImage' }),
-    saveImage () {
-      this.addImage(this.sharpImage)
-    },
     applyChanges () {
       const { data, width, height } = this.getActiveImage.imageData
 
@@ -154,7 +149,7 @@ export default {
       } else if (this.maskType === 'mask-2') {
         filterArr = [-1, -1, -1, -1, 8, -1, -1, -1, -1];
       } else if (this.maskType === 'sobel-n') {
-        filterArr = [1, 2, 1, 0, 0, 0, -1, -2, -1];
+        filterArr = [1, 1, 1,  0, 0, 0,  -1, -1, -1];
       } else if (this.maskType === 'sobel-ne') {
         filterArr = [0, 1, 2, -1, 0, 1, -2, -1, 0];
       } else if (this.maskType === 'sobel-e') {

@@ -1,7 +1,8 @@
 <template>
   <div class="container-fluid">
     <HistogramTransformation :activeImages="getActiveImages" :stretchedImage="maskImage"
-                             @boot="applyChanges" :methodName="'wyostrz obraz'">
+                             @boot="applyChanges" :methodName="'Wykonaj operacje'"
+                             :isReadyToBoot="isReadyToModify">
       <div class="d-flex flex-column">
         <div class="input-group my-3">
           <label class="input-group-text" for="first-image">
@@ -73,15 +74,13 @@
         <!--            </div>-->
         <!--          </div>-->
         <!--        </fieldset>-->
-        <button @click="saveImage">Zapisz obraz</button>
-
       </div>
     </HistogramTransformation>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import HistogramTransformation from '@/components/HistogramTransformation'
 import { createImageModel } from '@/helpers/createImageModel'
 import { convertToCanvas } from '@/imageOperations/imageOperations'
@@ -103,10 +102,6 @@ export default {
     HistogramTransformation
   },
   methods: {
-    ...mapActions({ addImage: 'activeImages/addImage' }),
-    saveImage () {
-      this.addImage(this.maskImage)
-    },
     applyChanges () {
       if (this.firstImageName && this.secondImageName) {
         const image = this.getActiveImages.find(image => image.name === this.firstImageName)
@@ -161,6 +156,9 @@ export default {
     },
     isCannyMaskSelected () {
       return this.maskType === 'canny'
+    },
+    isReadyToModify(){
+      return Boolean(this.firstImageName) && Boolean(this.secondImageName)
     }
   }
 }

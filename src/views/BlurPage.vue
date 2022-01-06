@@ -68,15 +68,13 @@
             </div>
           </div>
         </fieldset>
-
-        <button @click="saveImage">Zapisz obraz</button>
       </div>
     </HistogramTransformation>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import HistogramTransformation from '@/components/HistogramTransformation'
 import { createImageModel } from '@/helpers/createImageModel'
 import { blur } from '@/imageOperations/blur';
@@ -103,7 +101,6 @@ export default {
     HistogramTransformation
   },
   methods: {
-    ...mapActions({ addImage: 'activeImages/addImage' }),
     blurImage () {
       const { data, width, height } = this.getActiveImage.imageData
       const newImageData = blur(
@@ -141,9 +138,6 @@ export default {
       }
 
     },
-    saveImage () {
-      this.addImage(this.bluredImage)
-    }
   },
   computed: {
     ...mapGetters({

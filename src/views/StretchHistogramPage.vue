@@ -14,13 +14,11 @@
         <input id="max__stretch_value" type="range" min="0" max="255" step="1"
                v-model="maxStretchValue">
       </div>
-      <button @click="saveStretchImage">Zapisz obraz</button>
     </HistogramTransformation>
 
     <HistogramTransformation :activeImage="getActiveImage" :stretchedImage="equalizedImage"
                              @boot="equalizeHistogram" :methodName="'Wyrównaj histogram'">
 
-      <button @click="saveEqualizedImage">Zapisz obraz</button>
     </HistogramTransformation>
 
     <HistogramTransformation :activeImage="getActiveImage" :stretchedImage="stretchedImageInRange"
@@ -47,14 +45,12 @@
                class="form-control text-center mb-2" :min="0" :max="255" :step="1"
                v-model="q4StretchInRange">
       </div>
-      <button @click="saveStretchedImageInRange">Zapisz obraz</button>
-
     </HistogramTransformation>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import {
   stretchingHistogram,
   equalizationHistogram, stretchInRangeOperation
@@ -87,16 +83,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ addImage: 'activeImages/addImage' }),
-    saveStretchImage () {
-      this.addImage(this.stretchedImage)
-    },
-    saveEqualizedImage () {
-      this.addImage(this.equalizedImage)
-    },
-    saveStretchedImageInRange () {
-      this.addImage(this.stretchedImageInRange)
-    },
     stretchHistogram () {
       const imgData = stretchingHistogram(this.getActiveImage.imageData.data,
         parseInt(this.minStretchValue), parseInt(this.maxStretchValue)
@@ -185,8 +171,6 @@ export default {
         // time:null,
         // timestamp:null,
       }
-
-      // this.addImage(this.stretchedImageInRange)
     },
   },
   computed: {

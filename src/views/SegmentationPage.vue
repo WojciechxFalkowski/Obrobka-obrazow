@@ -117,14 +117,12 @@
           </div>
         </fieldset>
       </div>
-
-      <button @click="saveImage">Zapisz obraz</button>
     </HistogramTransformation>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import HistogramTransformation from '@/components/HistogramTransformation'
 import { convertToCanvas } from '@/imageOperations/imageOperations'
 import { createImageModel } from '@/helpers/createImageModel'
@@ -159,10 +157,6 @@ export default {
     HistogramTransformation
   },
   methods: {
-    ...mapActions({ addImage: 'activeImages/addImage' }),
-    saveImage () {
-      this.addImage(this.segmentationImage)
-    },
     segmentation () {
       const { data, width, height } = this.getActiveImage.imageData
       let newImageData = null;
@@ -229,8 +223,6 @@ export default {
         // time:null,
         // timestamp:null,
       }
-
-      // this.addImage(this.negationImage)
     }
   },
   computed: {
