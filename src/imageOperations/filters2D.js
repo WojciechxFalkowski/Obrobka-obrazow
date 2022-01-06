@@ -1,7 +1,7 @@
-export const AVERAGE = "average";
-export const K_AVERAGE = "k-average";
-export const MEDIAN = "median";
-export const GAUSSIAN = "gaussian";
+export const AVERAGE = 'average';
+export const K_AVERAGE = 'k-average';
+export const MEDIAN = 'median';
+export const GAUSSIAN = 'gaussian';
 
 export const BORDER_COPY = 255;
 
@@ -126,7 +126,7 @@ const prepareBorder = (src, kernelSize, borderType, borderColor) => {
   if (borderType !== BORDER_COPY) {
     // Obramowanie wg rodzaju wspieranego przez OpenCV
     let borderColorScalar;
-    if (typeof borderColor === "number") {
+    if (typeof borderColor === 'number') {
       borderColorScalar = new window.cv.Scalar(
         borderColor,
         borderColor,
@@ -202,19 +202,19 @@ export const blur = (
   borderColor,
   kValue
 ) => {
-  const resultCanvas = document.createElement("canvas");
+  const resultCanvas = document.createElement('canvas');
 
-  if (typeof borderType === "undefined") {
+  if (typeof borderType === 'undefined') {
     borderType = window.cv.BORDER_DEFAULT;
   }
-  if (typeof borderColor === "undefined") {
+  if (typeof borderColor === 'undefined') {
     borderColor = {
       red: 0,
       green: 0,
-      blue: 0,
+      blue: 0
     };
   }
-  if (typeof kValue === "undefined" || isNaN(kValue)) {
+  if (typeof kValue === 'undefined' || isNaN(kValue)) {
     kValue = 1;
   }
 
@@ -272,8 +272,7 @@ export const blur = (
  * @return {HTMLCanvasElement}
  */
 export const filter2D = (sourceCanvas, filterArr, borderType, borderColor) => {
-  const resultCanvas = document.createElement("canvas");
-
+  const resultCanvas = document.createElement('canvas');
   const kernelSize = Math.sqrt(filterArr.length);
   const src = window.cv.imread(sourceCanvas);
 
@@ -311,6 +310,29 @@ export const filter2D = (sourceCanvas, filterArr, borderType, borderColor) => {
   return resultCanvas;
 };
 
+
+export const sobelDirection = (sourceCanvas, borderType, borderColor, direction) => {
+  const resultCanvas = document.createElement('canvas');
+  const src = window.cv.imread(sourceCanvas);
+
+  switch (direction) {
+    case 'sobel-x': {
+      let dstx = new window.cv.Mat();
+      window.cv.cvtColor(src, src, window.cv.COLOR_RGB2GRAY, 0)
+      window.cv.Sobel(src, dstx, window.cv.CV_8U, 1, 0, 3, 1, 0, window.cv.BORDER_DEFAULT);
+      window.cv.imshow(resultCanvas, dstx);
+      break;
+    }
+    default: {
+      let dsty = new window.cv.Mat();
+      window.cv.cvtColor(src, src, window.cv.COLOR_RGB2GRAY, 0)
+      window.cv.Sobel(src, dsty, window.cv.CV_8U, 0, 1, 3, 1, 0, window.cv.BORDER_DEFAULT);
+      window.cv.imshow(resultCanvas, dsty);
+      break;
+    }
+  }
+  return resultCanvas;
+}
 /**
  * Wykonaj filtrację Sobel
  * @param {HTMLCanvasElement} sourceCanvas
@@ -318,7 +340,7 @@ export const filter2D = (sourceCanvas, filterArr, borderType, borderColor) => {
  * @return {HTMLCanvasElement}
  */
 export const sobel = (sourceCanvas, borderType, borderColor) => {
-  const resultCanvas = document.createElement("canvas");
+  const resultCanvas = document.createElement('canvas');
   const kernelSize = 3;
 
   const sobelX = new window.cv.Mat();
@@ -378,7 +400,7 @@ export const sobel = (sourceCanvas, borderType, borderColor) => {
  * @return {HTMLCanvasElement}
  */
 export const canny = (sourceCanvas, threshold, borderType, borderColor) => {
-  const resultCanvas = document.createElement("canvas");
+  const resultCanvas = document.createElement('canvas');
 
   if (isNaN(threshold)) {
     threshold = 0;

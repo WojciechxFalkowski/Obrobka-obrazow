@@ -150,11 +150,62 @@ export const mapPixelValuesToRGBArrays = (rgbaPixels) => {
   }
 }
 
+// Color images
+export const equalizationHistogramLab = (lLUT, rgbaPixels) => {
+  console.log('equalizationHistogram')
+  console.log(lLUT)
+  console.log(rgbaPixels)
+
+  console.log()
+  const pixelSum = rgbaPixels.length / 4;
+  // console.log('pixelSum')
+  // console.log(pixelSum)
+  const lut = (new Array(256)).fill(0);
+  // console.log('lut')
+  // console.log(lut)
+  const distributor = (new Array(256)).fill(0);
+  // console.log('distributor')
+  // console.log(distributor)
+
+  let dMin = 0;
+
+  for (let index = 0; index < distributor.length; ++index) {
+    for (let k = 0; k <= index; ++k) {
+      distributor[index] += lLUT[k];
+    }
+  }
+  console.log('distributor after')
+  console.log(distributor)
+
+  for (let index = 0; index < distributor.length; index++) {
+    if (dMin === 0) {
+      // first not 0 value
+      dMin = distributor[index] / distributor[distributor.length - 1]
+    }
+  }
+
+  // console.log('dMin')
+  // console.log(dMin)
+  for (let index = 0; index < distributor.length; index++) {
+    lut[index] = Math.round(((distributor[index] - dMin) / (pixelSum - dMin)) * 255);
+  }
+  // console.log('lut')
+  // console.log(lut)
+
+  const a = rgbaPixels.map(channel => {
+    return lut[channel]
+  })
+  // console.log('a')
+  // console.log(a)
+  return a
+}
+
 // Gray scale images
 export const equalizationHistogram = (grayLut, rgbaPixels) => {
   const pixelSum = rgbaPixels.length / 4;
   const lut = (new Array(256)).fill(0);
   const distributor = (new Array(256)).fill(0);
+
   let dMin = 0;
 
   for (let index = 0; index < distributor.length; ++index) {
@@ -162,6 +213,7 @@ export const equalizationHistogram = (grayLut, rgbaPixels) => {
       distributor[index] += grayLut[k];
     }
   }
+
   for (let index = 0; index < distributor.length; index++) {
     if (dMin === 0) {
       // first not 0 value
@@ -172,8 +224,7 @@ export const equalizationHistogram = (grayLut, rgbaPixels) => {
   for (let index = 0; index < distributor.length; index++) {
     lut[index] = Math.round(((distributor[index] - dMin) / (pixelSum - dMin)) * 255);
   }
-
-  return rgbaPixels.map(channel => {
+  return  rgbaPixels.map(channel => {
     return lut[channel]
   })
 }

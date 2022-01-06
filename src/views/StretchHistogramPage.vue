@@ -21,6 +21,11 @@
 
     </HistogramTransformation>
 
+    <HistogramTransformation :activeImage="getActiveImage" :stretchedImage="equalizedImageLab"
+                             @boot="equalizeHistogramTest" :methodName="'Wyrównaj histogram Lab'">
+
+    </HistogramTransformation>
+
     <HistogramTransformation :activeImage="getActiveImage" :stretchedImage="stretchedImageInRange"
                              @boot="stretchHistogramInRange"
                              :methodName="'Rozciągnij histogram w zakresie p1, p2, q3, q4'">
@@ -53,10 +58,13 @@
 import { mapGetters } from 'vuex'
 import {
   stretchingHistogram,
-  equalizationHistogram, stretchInRangeOperation
+  // eslint-disable-next-line no-unused-vars
+  equalizationHistogram,equalizationHistogramLab, stretchInRangeOperation
 } from '@/imageOperations/imageOperations'
 import HistogramTransformation from '@/components/HistogramTransformation'
 import { createImageModel } from '@/helpers/createImageModel'
+// eslint-disable-next-line no-unused-vars
+import { rgb_to_lab, rgb2lab, lab2rgb } from '@/imageOperations/rgbToLab'
 
 export default {
   name: 'StretchHistogramPage',
@@ -67,6 +75,7 @@ export default {
     return {
       stretchedImage: {},
       equalizedImage: {},
+      equalizedImageLab: {},
       minStretchValue: 0,
       maxStretchValue: 255,
       stretchedImageInRange: {},
@@ -111,11 +120,205 @@ export default {
 
       // this.addImage(this.stretchedImage)
     },
+    equalizeHistogramTest () {
+      console.log('equalizeHistogramTest')
+      console.log(this.getActiveImage)
+      const imageDataM = []
+      const lChannel = []
+      const aChannel = []
+      const bChannel = []
+      for (let i = 0; i < this.getActiveImage.imageData.data.length; i += 4) {
+        const r = this.getActiveImage.imageData.data[i]
+        const g = this.getActiveImage.imageData.data[i + 1]
+        const b = this.getActiveImage.imageData.data[i + 2]
+        const [x,y,z] = rgb2lab([r, g, b])
+        if(i===0)
+        {
+          console.log(x)
+          console.log(y)
+          console.log(z)
+          console.log(rgb2lab([r, g, b]))
+        }
+        lChannel.push(Math.floor(x))
+        aChannel.push(Math.floor(y))
+        bChannel.push(Math.floor(z))
+        // imageDataM.push(...rgb2lab([r, g, b]))
+
+        imageDataM.push(Math.floor(x))
+        imageDataM.push(Math.floor(y))
+        imageDataM.push(Math.floor(z))
+        imageDataM.push(255)
+      }
+
+      const lLut = (new Array(256)).fill(0);
+      lChannel.forEach(channel => {
+        lLut[Math.floor(channel)]++
+      })
+      // console.log('imageDataM')
+      // console.log(imageDataM)
+      // console.log('lChannel')
+      // console.log(lChannel)
+      // console.log('lLUT')
+      // console.log(lLut)
+
+      // eslint-disable-next-line no-unused-vars
+      const imgData = equalizationHistogramLab(
+        lLut,
+        imageDataM
+      )
+      // const imageDataAfterLabToRGB = []
+      // for (let i = 0; i < this.getActiveImage.imageData.data.length; i += 4) {
+      //   const lChannell = this.getActiveImage.imageData.data[i]
+      //   const aChannell = this.getActiveImage.imageData.data[i + 1]
+      //   const bChannell = this.getActiveImage.imageData.data[i + 2]
+      //   const [r,g,b] = lab2rgb([lChannell, aChannell, bChannell])
+      //   imageDataAfterLabToRGB.push(Math.floor(r))
+      //   imageDataAfterLabToRGB.push(Math.floor(g))
+      //   imageDataAfterLabToRGB.push(Math.floor(b))
+      //   imageDataAfterLabToRGB.push(255)
+      // }
+      // const imgData = equalizationHistogram(
+      //   this.getActiveImage.pixelAmounts.gray,
+      //   this.getActiveImage.imageData.data
+      // )
+      // const imageDataModified = []
+      // for (let i = 0; i < imageDataModified.length; i++) {
+      //   imageDataModified.push(...imageDataModified[i])
+      // }
+      // console.log('imageDataModified')
+      // console.log(imageDataModified)
+      // const { imageData, imageDataUrl, isGrayScale, pixelAmounts } = createImageModel(
+      //   imageDataM,
+      //   this.getActiveImage.imageData.width,
+      //   this.getActiveImage.imageData.height
+      // );
+
+      const { imageData, imageDataUrl, isGrayScale, pixelAmounts } = createImageModel(
+        imgData,
+        this.getActiveImage.imageData.width,
+        this.getActiveImage.imageData.height
+      );
+
+      this.equalizedImageLab = {
+        id: null,
+        imageData: imageData,
+        imageDataURL: imageDataUrl,
+        // isActive: null,
+        isGrayScale: isGrayScale,
+        modelId: this.getActiveImage.modelId,
+        // name: null,
+        // path: null,
+        pixelAmounts
+        // size:null,
+        // time:null,
+        // timestamp:null,
+      }
+
+      // this.addImage(this.equalizedImage)
+    },
+    equalizeHistogramLab () {
+      console.log('equalizeHistogramLab')
+      console.log(this.getActiveImage)
+      // const imageDataM = []
+      const lChannel = []
+      const aChannel = []
+      const bChannel = []
+      for (let i = 0; i < this.getActiveImage.imageData.data.length; i += 4) {
+        const r = this.getActiveImage.imageData.data[i]
+        const g = this.getActiveImage.imageData.data[i + 1]
+        const b = this.getActiveImage.imageData.data[i + 2]
+        const [x,y,z] = rgb2lab([r, g, b])
+        lChannel.push(Math.floor(x))
+        aChannel.push(Math.floor(y))
+        bChannel.push(Math.floor(z))
+        // imageDataM.push(...rgb2lab([r, g, b]))
+
+        // imageDataM.push(Math.floor(x))
+        // imageDataM.push(Math.floor(y))
+        // imageDataM.push(Math.floor(z))
+        // imageDataM.push(255)
+      }
+
+      const lLut = (new Array(256)).fill(0);
+      lChannel.forEach(channel => {
+        lLut[Math.floor(channel)]++
+      })
+      // console.log('imageDataM')
+      // console.log(imageDataM)
+      // console.log('lChannel')
+      // console.log(lChannel)
+      // console.log('lLUT')
+      // console.log(lLut)
+
+      // eslint-disable-next-line no-unused-vars
+      const imgData = equalizationHistogramLab(
+        lLut,
+        lChannel
+      )
+      console.log('===porownanie===')
+      console.log(lLut)
+      console.log(imgData)
+
+      const imageDataAfterLabToRGB = []
+
+      for (let i = 0; i < aChannel.length; i += 1) {
+        const lChannell = imgData[i]
+        const aChannell = aChannel[i]
+        const bChannell = bChannel[i]
+        const [r,g,b] = lab2rgb([lChannell, aChannell, bChannell])
+        imageDataAfterLabToRGB.push(Math.floor(r))
+        imageDataAfterLabToRGB.push(Math.floor(g))
+        imageDataAfterLabToRGB.push(Math.floor(b))
+        imageDataAfterLabToRGB.push(255)
+      }
+      // const imgData = equalizationHistogram(
+      //   this.getActiveImage.pixelAmounts.gray,
+      //   this.getActiveImage.imageData.data
+      // )
+      // const imageDataModified = []
+      // for (let i = 0; i < imageDataModified.length; i++) {
+      //   imageDataModified.push(...imageDataModified[i])
+      // }
+      // console.log('imageDataModified')
+      // console.log(imageDataModified)
+      // const { imageData, imageDataUrl, isGrayScale, pixelAmounts } = createImageModel(
+      //   imageDataM,
+      //   this.getActiveImage.imageData.width,
+      //   this.getActiveImage.imageData.height
+      // );
+
+      const { imageData, imageDataUrl, isGrayScale, pixelAmounts } = createImageModel(
+        imageDataAfterLabToRGB,
+        this.getActiveImage.imageData.width,
+        this.getActiveImage.imageData.height
+      );
+
+      this.equalizedImageLab = {
+        id: null,
+        imageData: imageData,
+        imageDataURL: imageDataUrl,
+        // isActive: null,
+        isGrayScale: isGrayScale,
+        modelId: this.getActiveImage.modelId,
+        // name: null,
+        // path: null,
+        pixelAmounts
+        // size:null,
+        // time:null,
+        // timestamp:null,
+      }
+
+      // this.addImage(this.equalizedImage)
+    },
     equalizeHistogram () {
       const imgData = equalizationHistogram(
         this.getActiveImage.pixelAmounts.gray,
         this.getActiveImage.imageData.data
       )
+      const imageDataModified = []
+      for (let i = 0; i < imageDataModified.length; i++) {
+        imageDataModified.push(...imageDataModified[i])
+      }
 
       const { imageData, imageDataUrl, isGrayScale, pixelAmounts } = createImageModel(
         imgData,
@@ -137,8 +340,6 @@ export default {
         // time:null,
         // timestamp:null,
       }
-
-      // this.addImage(this.equalizedImage)
     },
     stretchHistogramInRange () {
       console.log(this.getActiveImage)
@@ -171,7 +372,7 @@ export default {
         // time:null,
         // timestamp:null,
       }
-    },
+    }
   },
   computed: {
     ...mapGetters({
