@@ -57,6 +57,8 @@
         </fieldset>
 
       </div>
+
+      <button @click="saveImage">Zapisz obraz</button>
     </HistogramTransformation>
   </div>
 </template>
@@ -86,6 +88,9 @@ export default {
   },
   methods: {
     ...mapActions({ addImage: 'activeImages/addImage' }),
+    saveImage () {
+      this.addImage(this.sharpImage)
+    },
     applyChanges () {
       const { data, width, height } = this.getActiveImage.imageData
 

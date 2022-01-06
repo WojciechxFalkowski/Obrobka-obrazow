@@ -26,7 +26,7 @@ export const bootIpcMainOn = (win) => {
             dialog.showSaveDialog(win, {
                 title: 'Title',
                 defaultPath: 'Capture',
-                filters: [{name: 'Images', extensions: ['png', 'jpg']}],
+                filters: [{name: 'Images', extensions: ['png', 'jpg','bmp']}],
             }).then(res => {
                 console.log('data')
                 console.log(res)

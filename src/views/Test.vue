@@ -88,24 +88,24 @@ export default {
       //   console.log(arg) // prints "pong"
       // })
 
-      window.customAPI.ipcRenderer.send('logged-in',2)
+      window.customAPI.ipcRenderer.send('app:on-active-images-change',2)
       // window.customAPI.ipcRenderer.send('app:on-file-delete', {filepath}).then(() => {
       //   this.getUploadedFiles()
       // });
     },
     testClickA(){
-      window.customAPI.ipcRenderer.send('logged-in',null)
+      window.customAPI.ipcRenderer.send('app:on-active-images-change',null)
 
     },
     testClickB(){
-      window.customAPI.ipcRenderer.send('logged-in',2)
+      window.customAPI.ipcRenderer.send('app:on-active-images-change',2)
 
     },
     testClickC(){
-      window.customAPI.ipcRenderer.send('logged-in',5)
+      window.customAPI.ipcRenderer.send('app:on-active-images-change',5)
     },
     testClickD(){
-      window.customAPI.ipcRenderer.send('logged-in',1)
+      window.customAPI.ipcRenderer.send('app:on-active-images-change',1)
     },
     testClickE(){
       this.$router.push('/stretch-histogram')

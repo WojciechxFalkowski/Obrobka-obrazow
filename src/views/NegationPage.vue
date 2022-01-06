@@ -1,7 +1,9 @@
 <template>
   <div class="container-fluid">
     <HistogramTransformation :activeImage="getActiveImage" :stretchedImage="negationImage"
-                             @boot="negation" :methodName="'Negacja'" />
+                             @boot="negation" :methodName="'Negacja'">
+      <button @click="saveImage">Zapisz obraz</button>
+    </HistogramTransformation>
   </div>
 </template>
 
@@ -23,6 +25,9 @@ export default {
   },
   methods: {
     ...mapActions({ addImage: 'activeImages/addImage' }),
+    saveImage () {
+      this.addImage(this.negationImage)
+    },
     negation () {
       const imgData = negationOperation(this.getActiveImage.imageData.data)
 

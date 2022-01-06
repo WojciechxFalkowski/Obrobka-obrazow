@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+// import Home from '../views/Home.vue'
 import Test from '../views/Test.vue'
 import StretchHistogramPage from '../views/StretchHistogramPage.vue'
 import NegationPage from '@/views/NegationPage'
@@ -10,14 +10,24 @@ import BlurPage from '@/views/BlurPage'
 import Filters2DPage from '@/views/Filters2DPage'
 import MaskPage from '@/views/MaskPage'
 import SegmentationPage from '@/views/SegmentationPage'
+import Files from '@/views/Files'
 
 Vue.use(VueRouter)
 
+// route level code-splitting
+// this generates a separate chunk (about.[hash].js) for this route
+// which is lazy-loaded when the route is visited.
 const routes = [
   {
     path: '/',
+    name: 'FilesPage',
+    component: Files,
+    // component: () => import(/* webpackChunkName: "about" */ '../views/Files.vue')
+  },
+  {
+    path: '/home',
     name: 'Home',
-    component: Home
+    component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
   },
   {
     path: '/stretch-histogram',
@@ -63,14 +73,6 @@ const routes = [
     path: '/test',
     name: 'Test',
     component: Test
-  },
-  {
-    path: '/files',
-    name: 'FilesPage',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Files.vue')
   }
 ]
 

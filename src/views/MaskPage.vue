@@ -73,6 +73,7 @@
         <!--            </div>-->
         <!--          </div>-->
         <!--        </fieldset>-->
+        <button @click="saveImage">Zapisz obraz</button>
 
       </div>
     </HistogramTransformation>
@@ -103,21 +104,14 @@ export default {
   },
   methods: {
     ...mapActions({ addImage: 'activeImages/addImage' }),
+    saveImage () {
+      this.addImage(this.maskImage)
+    },
     applyChanges () {
       if (this.firstImageName && this.secondImageName) {
-        console.log('Teraz')
-        // console.log(this.firstImageName)
-        // console.log(this.secondImageName)
         const image = this.getActiveImages.find(image => image.name === this.firstImageName)
         const maskImage = this.getActiveImages.find(image => image.name === this.secondImageName)
 
-        console.log(convertToCanvas(image.imageData.data, image.imageData.width, image.imageData.height))
-        console.log(image)
-        console.log(maskImage)
-        // console.log('a')
-        // console.log(convertToCanvas(image.imageData.data, image.imageData.width,
-        //   image.imageData.height))
-        // console.log('aa')
         const newCanvas = mask(
           this.operationType,
           convertToCanvas(image.imageData.data, image.imageData.width, image.imageData.height),
@@ -129,14 +123,9 @@ export default {
 
         this.createImage(newImageData)
 
-        // console.log('newCanvas')
-        // console.log(newCanvas)
       } else {
         console.log('NIE WYPELNIONO DANYCH')
       }
-      // console.log(this.getActiveImage)
-      // console.log(this.getActiveImages)
-
 
     },
     createImage (newImageData) {

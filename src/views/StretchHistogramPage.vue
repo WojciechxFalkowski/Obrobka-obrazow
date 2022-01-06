@@ -14,10 +14,42 @@
         <input id="max__stretch_value" type="range" min="0" max="255" step="1"
                v-model="maxStretchValue">
       </div>
+      <button @click="saveStretchImage">Zapisz obraz</button>
     </HistogramTransformation>
 
     <HistogramTransformation :activeImage="getActiveImage" :stretchedImage="equalizedImage"
-                             @boot="equalizeHistogram" :methodName="'Wyrównaj histogram'" />
+                             @boot="equalizeHistogram" :methodName="'Wyrównaj histogram'">
+
+      <button @click="saveEqualizedImage">Zapisz obraz</button>
+    </HistogramTransformation>
+
+    <HistogramTransformation :activeImage="getActiveImage" :stretchedImage="stretchedImageInRange"
+                             @boot="stretchHistogramInRange"
+                             :methodName="'Rozciągnij histogram w zakresie p1, p2, q3, q4'">
+      <div class="d-flex flex-column">
+        <label for="p1_stretch_in_range__value">p1</label>
+        <input id="p1_stretch_in_range__value" type="number"
+               class="form-control text-center mb-2" :min="0" :max="255" :step="1"
+               v-model="p1StretchInRange">
+
+        <label for="p2_stretch_in_range__value">p2</label>
+        <input id="p2_stretch_in_range__value" type="number"
+               class="form-control text-center mb-2" :min="0" :max="255" :step="1"
+               v-model="p2StretchInRange">
+
+        <label for="q3_stretch_in_range__value">q3</label>
+        <input id="q3_stretch_in_range__value" type="number"
+               class="form-control text-center mb-2" :min="0" :max="255" :step="1"
+               v-model="q3StretchInRange">
+
+        <label for="q4_stretch_in_range__value">q4</label>
+        <input id="q4_stretch_in_range__value" type="number"
+               class="form-control text-center mb-2" :min="0" :max="255" :step="1"
+               v-model="q4StretchInRange">
+      </div>
+      <button @click="saveStretchedImageInRange">Zapisz obraz</button>
+
+    </HistogramTransformation>
   </div>
 </template>
 
@@ -25,7 +57,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import {
   stretchingHistogram,
-  equalizationHistogram,
+  equalizationHistogram, stretchInRangeOperation
 } from '@/imageOperations/imageOperations'
 import HistogramTransformation from '@/components/HistogramTransformation'
 import { createImageModel } from '@/helpers/createImageModel'
@@ -41,7 +73,12 @@ export default {
       equalizedImage: {},
       minStretchValue: 0,
       maxStretchValue: 255,
-
+      stretchedImageInRange: {},
+      posterizationValue: 1,
+      p1StretchInRange: 0,
+      p2StretchInRange: 255,
+      q3StretchInRange: 0,
+      q4StretchInRange: 255
     }
   },
   updated () {
@@ -51,6 +88,15 @@ export default {
   },
   methods: {
     ...mapActions({ addImage: 'activeImages/addImage' }),
+    saveStretchImage () {
+      this.addImage(this.stretchedImage)
+    },
+    saveEqualizedImage () {
+      this.addImage(this.equalizedImage)
+    },
+    saveStretchedImageInRange () {
+      this.addImage(this.stretchedImageInRange)
+    },
     stretchHistogram () {
       const imgData = stretchingHistogram(this.getActiveImage.imageData.data,
         parseInt(this.minStretchValue), parseInt(this.maxStretchValue)
@@ -107,6 +153,40 @@ export default {
       }
 
       // this.addImage(this.equalizedImage)
+    },
+    stretchHistogramInRange () {
+      console.log(this.getActiveImage)
+      const imgData =
+        stretchInRangeOperation(
+          this.getActiveImage.imageData.data,
+          parseInt(this.p1StretchInRange),
+          parseInt(this.p2StretchInRange),
+          parseInt(this.q3StretchInRange),
+          parseInt(this.q4StretchInRange)
+        )
+
+      const { imageData, imageDataUrl, isGrayScale, pixelAmounts } = createImageModel(
+        imgData,
+        this.getActiveImage.imageData.width,
+        this.getActiveImage.imageData.height
+      );
+
+      this.stretchedImageInRange = {
+        id: null,
+        imageData: imageData,
+        imageDataURL: imageDataUrl,
+        // isActive: null,
+        isGrayScale: isGrayScale,
+        modelId: this.getActiveImage.modelId,
+        // name: null,
+        // path: null,
+        pixelAmounts
+        // size:null,
+        // time:null,
+        // timestamp:null,
+      }
+
+      // this.addImage(this.stretchedImageInRange)
     },
   },
   computed: {

@@ -69,6 +69,7 @@
           </div>
         </fieldset>
 
+        <button @click="saveImage">Zapisz obraz</button>
       </div>
     </HistogramTransformation>
   </div>
@@ -99,7 +100,7 @@ export default {
     }
   },
   components: {
-    HistogramTransformation,
+    HistogramTransformation
   },
   methods: {
     ...mapActions({ addImage: 'activeImages/addImage' }),
@@ -139,17 +140,19 @@ export default {
         // timestamp:null,
       }
 
-      // this.addImage(this.posterizationImage)
+    },
+    saveImage () {
+      this.addImage(this.bluredImage)
     }
   },
   computed: {
     ...mapGetters({
       getActiveImage: 'activeImages/getActiveImage'
     }),
-    isBorderTypeShown(){
+    isBorderTypeShown () {
       return this.borderType === 0
     },
-    isBlurTypeShown(){
+    isBlurTypeShown () {
       return this.blurType === 'k-average'
     }
   }

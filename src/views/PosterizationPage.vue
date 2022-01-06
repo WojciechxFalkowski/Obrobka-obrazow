@@ -7,6 +7,7 @@
         <input id="posterization_value" type="number" class="form-control text-center mb-2" :min="1"
                :max="255" :step="1"
                v-model="posterizationValue">
+        <button @click="saveImage">Zapisz obraz</button>
       </div>
     </HistogramTransformation>
   </div>
@@ -31,6 +32,9 @@ export default {
   },
   methods: {
     ...mapActions({ addImage: 'activeImages/addImage' }),
+    saveImage () {
+      this.addImage(this.posterizationImage)
+    },
     posterization () {
       const imgData =
         posterizationOperation(

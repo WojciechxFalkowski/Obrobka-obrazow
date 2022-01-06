@@ -87,7 +87,7 @@ export default {
       this.toggleImageActivity({modelId,imageId})
       // console.log('getActiveImages')
       // console.log(this.getActiveImages.length)
-      window.customAPI.ipcRenderer.send('logged-in',this.getActiveImages.length)
+      window.customAPI.ipcRenderer.send('app:on-active-images-change',this.getActiveImages.length)
     },
     boxFilteringImageOption (images) {
       this.addImages(boxFiltering(images))
