@@ -146,7 +146,7 @@ export default {
 
       lChannel.forEach(channel => {
         lLut[Math.floor(channel)]++
-      })p
+      })
 
       const imgData = equalizationHistogramLab(
         lLut,
