@@ -151,21 +151,11 @@ export const mapPixelValuesToRGBArrays = (rgbaPixels) => {
 }
 
 // Color images
-export const equalizationHistogramLab = (lLUT, rgbaPixels) => {
-  console.log('equalizationHistogram')
-  console.log(lLUT)
-  console.log(rgbaPixels)
+export const equalizationHistogramLab = (lLUT, lChannel) => {
 
-  console.log()
-  const pixelSum = rgbaPixels.length / 4;
-  // console.log('pixelSum')
-  // console.log(pixelSum)
-  const lut = (new Array(256)).fill(0);
-  // console.log('lut')
-  // console.log(lut)
-  const distributor = (new Array(256)).fill(0);
-  // console.log('distributor')
-  // console.log(distributor)
+  const pixelSum = lChannel.length ;
+  const lut = (new Array(100)).fill(0);
+  const distributor = (new Array(100)).fill(0);
 
   let dMin = 0;
 
@@ -174,8 +164,6 @@ export const equalizationHistogramLab = (lLUT, rgbaPixels) => {
       distributor[index] += lLUT[k];
     }
   }
-  console.log('distributor after')
-  console.log(distributor)
 
   for (let index = 0; index < distributor.length; index++) {
     if (dMin === 0) {
@@ -184,20 +172,13 @@ export const equalizationHistogramLab = (lLUT, rgbaPixels) => {
     }
   }
 
-  // console.log('dMin')
-  // console.log(dMin)
   for (let index = 0; index < distributor.length; index++) {
-    lut[index] = Math.round(((distributor[index] - dMin) / (pixelSum - dMin)) * 255);
+    lut[index] = Math.round(((distributor[index] - dMin) / (pixelSum - dMin)) * 100);
   }
-  // console.log('lut')
-  // console.log(lut)
 
-  const a = rgbaPixels.map(channel => {
+  return lChannel.map(channel => {
     return lut[channel]
   })
-  // console.log('a')
-  // console.log(a)
-  return a
 }
 
 // Gray scale images

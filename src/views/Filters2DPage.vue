@@ -9,9 +9,9 @@
           </label>
 
           <select id="mask-type" v-model="maskType" class="form-select">
-            <option value="mask-1">Mask 1</option>
-            <option value="mask-2">Mask 2</option>
-            <option value="mask-3">Mask 3</option>
+            <option value="mask-1">Laplasjan 1</option>
+            <option value="mask-2">Laplasjan 2</option>
+            <option value="mask-3">Laplasjan 3</option>
             <option value="sobel-x">Sobel X</option>
             <option value="sobel-y">Sobel Y</option>
             <option value="prewitt-n">Prewitt N</option>

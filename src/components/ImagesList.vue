@@ -16,7 +16,7 @@
           <div>
             <img @click="deleteUploadedImage(uploadedImage.path)" class="icon" src="./../assets/img/delete.svg"
                  alt="delete document icon">
-            <img class="icon" src="./../assets/img/open.svg" alt="open document icon">
+<!--            <img class="icon" src="./../assets/img/open.svg" alt="open document icon">-->
 
             <svg @click="(e)=>addToActiveFiles(e,index)" class="icon images-list__add-icon"
                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

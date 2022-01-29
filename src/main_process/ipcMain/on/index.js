@@ -10,9 +10,6 @@ export const bootIpcMainOn = (win) => {
      * Save image after choose in navbar menu option 'Zapisz obraz'.
      */
     ipcMain.on('app:save-image', (event, activeImages) => {
-        console.log('on app:save-image')
-        // console.log(event)
-        console.log(activeImages)
 
         if (activeImages.length > 1) {
             dialog.showErrorBox('ERROR', 'Można zapisać na raz tylko jedno zdjęcie.')
@@ -28,8 +25,6 @@ export const bootIpcMainOn = (win) => {
                 defaultPath: 'Capture',
                 filters: [{name: 'Images', extensions: ['png', 'jpg','bmp']}],
             }).then(res => {
-                console.log('data')
-                console.log(res)
 
                 // remove Base64 stuff from the Image
                 const base64Data = url.replace(/^data:image\/png;base64,/, "");
