@@ -112,13 +112,8 @@ pokazywane dane operacje aplikacji.
 </p>
 
 #### Aby zamknąć program należy kliknąć na ikonę krzyżyka w prawym górnym rogu okna głównego
-
 <p align="center">
-  <img src="https://github.com/WojciechxFalkowski/apo-electron/blob/main/images/readme/2.1.b.png?raw=true"alt="Home page"/>
-</p>
-
-<p align="center">
-  <img src="https://github.com/WojciechxFalkowski/apo-electron/blob/main/images/readme/2.1.c.png?raw=true"alt="Home page"/>
+  <img src="https://github.com/WojciechxFalkowski/apo-electron/blob/main/images/readme/2.1.png?raw=true"alt="Home page"/>
 </p>
 
 ### 2.2. Praca z programem
@@ -130,10 +125,24 @@ Po kliknięciu przycisku ‘Dodaj plik’ ukaże się okno, gdzie może wybrać 
 dodane do projektu. W moim przypadku jest to plik ‘lena.jpg’. Uwaga do poprawnego działania
 aplikacji należy korzystać z formatów plików ‘.png’, ‘.jpg’, ‘.bmp’.
 
+<p align="center">
+  <img src="https://github.com/WojciechxFalkowski/apo-electron/blob/main/images/readme/2.2.a.png?raw=true"alt="Home page"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/WojciechxFalkowski/apo-electron/blob/main/images/readme/2.2.b.png?raw=true"alt="Home page"/>
+</p>
 
 Po wgraniu zdjęcia obraz będzie wyświetlony w prawej części okna aplikacji, aby zacząć prace
 nad nim należy kliknąć przycisk „+”.
 
+<p align="center">
+  <img src="https://github.com/WojciechxFalkowski/apo-electron/blob/main/images/readme/2.2.c.png?raw=true"alt="Home page"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/WojciechxFalkowski/apo-electron/blob/main/images/readme/2.2.d.png?raw=true"alt="Home page"/>
+</p>
 
 ### 3. Histogram i tablica LUT
 
