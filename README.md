@@ -1,4 +1,4 @@
-# apo_wojciech_falkowski
+# Obróbka obrazów
 
 ### Użyte technologie:
 

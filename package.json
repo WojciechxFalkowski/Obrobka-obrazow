@@ -1,8 +1,8 @@
 {
-  "name": "apo_wojciech_falkowski",
+  "name": "obrobka_obrazow",
   "version": "0.1.0",
   "private": true,
-  "description": "Custom project",
+  "description": "Projekt został zrealizowany w ramach programu implementującego funkcjonalności do obróbki obrazów, który został wykonany w języku JavaScript z wykorzystaniem biblioteki OpenCV i frameworka electron.js do tworzenia aplikacji desktop’owych.",
   "author": "Wojciech Falkowski",
   "scripts": {
     "start": "yarn run electron:serve",
