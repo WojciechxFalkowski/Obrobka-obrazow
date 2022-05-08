@@ -75,25 +75,21 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### 1. Wprowadzenie
 
-Projekt został zrealizowany w ramach programu implementującego funkcjonalności z laboratoriów
-Przedmiotu Algorytmy Przetwarzania Obrazów, który został wykonany w języku JavaScript z wykorzystaniem
+Projekt został zrealizowany w ramach programu implementującego funkcjonalności do obróbki 
+obrazów, który został wykonany w języku JavaScript z wykorzystaniem
 biblioteki OpenCV i frameworka electron.js do tworzenia aplikacji desktop’owych.
 
 ### 1.1. Projekt składa się z:
-
-- pliku „apo_wojciech_falkowski.exe” w folderze „guide”, który instaluje aplikację na danym 
-  komputerze
-- pliku „Falkowski_Wojciech_dokumentacja_projektu.pdf” w folderze „guide”, w której znajduje się
-  dokumentacja projektu
-- plików do uruchomienia lokalnie projektu
-- linku pod którym można pobrać wersję produkcyjną programu[https://ln5.sync.
-  com/dl/13414bfc0/tcxhqnks-xzc77mnf-7tgxwj9m-4r43k3vx](https://ln5.sync.com/dl/13414bfc0/tcxhqnks-xzc77mnf-7tgxwj9m-4r43k3vx)
-
-<a href="https://ln5.sync.com/dl/13414bfc0/tcxhqnks-xzc77mnf-7tgxwj9m-4r43k3vx" 
-  target="_blank">link</a>
+- folderu „public” gdzie można znaleźć wykorzystane czcionki w projekcie, przykładowe obrazy, 
+  biblioteke OpenCV
+- folderu „images” w którym znajdują się zdjęcia w tym svg wykorzystane w projekcie
+- folderu „src” zawierające wszystkie komponenty i logikę biznesową projektu
+- linku pod którym można pobrać wersję produkcyjną programu „apo_wojciech_falkowski.exe”
+  [link](https://ln5.sync.com/dl/13414bfc0/tcxhqnks-xzc77mnf-7tgxwj9m-4r43k3vx)
+  
 ### 1.2. Uruchomienie aplikacji
 
-#### Aby uruchomić aplikację należy pobrać plik apo_wojciech_falkowski.exe i uruchomić na własnym komputerze
+#### Aby uruchomić aplikację należy pobrać plik „apo_wojciech_falkowski.exe” ([link](https://ln5.sync.com/dl/13414bfc0/tcxhqnks-xzc77mnf-7tgxwj9m-4r43k3vx)) i uruchomić na własnym komputerze
 
 ### 1.3. Uruchomienie aplikacji (wersja developerska)
 
@@ -111,9 +107,19 @@ Aplikacja składa się z menu górnego z dwoma przyciskami „Obraz” i „Oper
 pokazywane dane operacje aplikacji.
 
 ### 2.1. Zamykanie programu
+<p align="center">
+  <img src="https://github.com/WojciechxFalkowski/apo-electron/blob/main/images/readme/2.1.a.png?raw=true"alt="Home page"/>
+</p>
 
 #### Aby zamknąć program należy kliknąć na ikonę krzyżyka w prawym górnym rogu okna głównego
 
+<p align="center">
+  <img src="https://github.com/WojciechxFalkowski/apo-electron/blob/main/images/readme/2.1.b.png?raw=true"alt="Home page"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/WojciechxFalkowski/apo-electron/blob/main/images/readme/2.1.c.png?raw=true"alt="Home page"/>
+</p>
 
 ### 2.2. Praca z programem
 
@@ -154,22 +160,13 @@ Użytkownik ma możliwość wybrania zakresu jaki go interesuje przykładowo zaz
 
 ### 4.1. Wyrównanie / equalizacja
 
-
 ### 5. Negacja
-
 
 ### 6. Progowanie binarne z progiem wskazywanym suwakiem
 
+### 6.1. Progowanie z zachowaniem poziomów szarości z progiem wskazywanym suwakiem
 
-### 6.1. Progowanie z zachowaniem poziomów szarości z progiem
-
-### wskazywanym suwakiem
-
-### 7. Redukcja poziomów szarości przez powtórna kwantyzacje z liczba
-
-### poziomów szarości wskazana przez użytkownika
-
-
+### 7. Redukcja poziomów szarości przez powtórna kwantyzacje z liczba poziomów szarości wskazana przez użytkownika
 
 ### 8. Rozciąganie histogramu z zakresu p1-p2 do zakresu q3-q
 
@@ -179,38 +176,19 @@ Użytkownik ma możliwość wybrania zakresu jaki go interesuje przykładowo zaz
 
 
 
-### 10. Wyostrzanie liniowe na 3 maskach laplasjanowych,
+### 10. Wyostrzanie liniowe na 3 maskach laplasjanowych, kierunkowa detekcja krawędzi w oparciu o maski 8 kierunkowych masek Sobela
 
-### kierunkowa detekcja krawędzi w oparciu o maski 8 kierunkowych
+#### UWAGA – openCV dla javascript’u udostępnia tylko detekcje krawędzi w osi X i Y, detekcja krawędzi operatorem opartym na masce Cannyego.
 
-### masek Sobela
-
-#### UWAGA – openCV dla javascript’u udostępnia tylko detekcje krawędzi w osi X i Y,
-
-#### detekcja krawędzi operatorem opartym na masce Cannyego.
-
-
-
-### 10.1. Operacja medianowa na otoczeniu 3x3, 5x5, 7x7, 9x9 z
-
-### uzupełnianiem brzegów.
-
+### 10.1. Operacja medianowa na otoczeniu 3x3, 5x5, 7x7, 9x9 z uzupełnianiem brzegów.
 
 ### 11. Operacje logiczne AND, OR, XOR
 
-### Aby wykonać operacje na wielu obrazach trzeba mieć zaznaczone minimum 2 obrazy
+### Aby wykonać operacje na wielu obrazach trzeba mieć zaznaczone minimum 2 obrazy. Następnie w menu górnym zostaną pokazane opcje, które można wykonać z dana liczba obrazów
 
-Następnie w menu górnym zostaną pokazane opcje, które można wykonać z dana liczba obrazów
-
-
-
-### 12. Progowanie metoda Otsu, progowanie z dwoma progami z
-
-### uwzględnieniem progowania z zachowanie poziomów szarości
-
+### 12. Progowanie metoda Otsu, progowanie z dwoma progami z uwzględnieniem progowania z zachowanie poziomów szarości
 
 ### 13. Segmentacja
-
 
 ### 14. Błędy aplikacji
 
