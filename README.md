@@ -102,8 +102,7 @@ biblioteki OpenCV i frameworka electron.js do tworzenia aplikacji desktop’owyc
 ### 2. Interfejs programu i podstawowe operacje
 
 <p align="center">
-  <img src="https://github.com/WojciechxFalkowski/apo-electron/blob/main/images/readme/2.png?
-raw=true"alt="Home page"/>
+  <img src="https://github.com/WojciechxFalkowski/apo-electron/blob/main/images/readme/2.png?raw=true"alt="Home page"/>
 </p>
 
 #### Po uruchomieniu aplikacji wyświetla się okno główne programu.
